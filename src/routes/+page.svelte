@@ -1011,9 +1011,7 @@
 						{#each currentMessages as message}
 							<div class="flex gap-3" class:justify-end={message.role === 'user'}>
 								{#if message.role === 'assistant'}
-									<div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-xs flex-shrink-0">
-										🦎
-									</div>
+									<img src="/axel.jpg" alt="Axel" class="w-7 h-7 rounded-full object-cover flex-shrink-0" />
 								{/if}
 								<div 
 									class="max-w-[80%] rounded-2xl px-4 py-2.5"
@@ -1046,18 +1044,13 @@
 										</div>
 									{/if}
 								</div>
-								{#if message.role === 'user'}
-									<div class="w-7 h-7 rounded-full bg-zinc-700 flex items-center justify-center text-xs flex-shrink-0">B</div>
-								{/if}
 							</div>
 						{/each}
 						
 						<!-- If waiting, show the question as the last message -->
 						{#if conv?.status === 'waiting' && conv?.waitingFor}
 							<div class="flex gap-3">
-								<div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-xs flex-shrink-0">
-									🦎
-								</div>
+								<img src="/axel.jpg" alt="Axel" class="w-7 h-7 rounded-full object-cover flex-shrink-0" />
 								<div class="max-w-[80%] rounded-2xl px-4 py-2.5 bg-zinc-800">
 									<p class="text-sm leading-relaxed">{conv.waitingFor}</p>
 								</div>
