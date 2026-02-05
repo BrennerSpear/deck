@@ -602,7 +602,7 @@
 						<span class="ml-auto text-xs text-zinc-500">{configFiles.reduce((acc, f) => acc + (f.children?.length ?? 0), 0)}</span>
 					</button>
 					{#if configExpanded}
-						<div class="px-2 pb-2">
+						<div class="px-2 pb-2" transition:slide={{ duration: 150 }}>
 							{#each configFiles as file}
 								{@const isExpanded = expandedFolders.has(file.name)}
 								<div>
@@ -855,7 +855,7 @@
 						<span class="ml-auto text-xs text-zinc-500">{changedFiles.length} files</span>
 					</button>
 					{#if changesExpanded}
-						<div class="px-4 pb-2 space-y-1">
+						<div class="px-4 pb-2 space-y-1" transition:slide={{ duration: 150 }}>
 							{#each changedFiles as file}
 								<div class="flex items-center gap-2 text-xs px-1 py-0.5 rounded hover:bg-zinc-800/50">
 									<span class="text-zinc-400 truncate flex-1 font-mono">{file.name}</span>
@@ -884,7 +884,7 @@
 						<span class="ml-auto text-xs text-zinc-500">{skills.length}</span>
 					</button>
 					{#if skillsExpanded}
-						<div class="px-2 pb-2">
+						<div class="px-2 pb-2" transition:slide={{ duration: 150 }}>
 							<!-- Repo skills -->
 							{#each repoSkills as skill}
 								<button 
