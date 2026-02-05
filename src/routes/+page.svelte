@@ -1091,8 +1091,8 @@
 							{#if skill}
 								<div 
 									class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
-									class:bg-violet-900={i === 0}
-									class:text-white={i === 0}
+									class:bg-violet-400={i === 0}
+									class:text-zinc-950={i === 0}
 									class:bg-zinc-800={i > 0}
 									class:text-zinc-300={i > 0}
 								>
@@ -1145,8 +1145,8 @@
 									{#if skill}
 										<div 
 											class="flex items-center gap-1 px-2 py-0.5 rounded text-xs"
-											class:bg-violet-900={i === 0}
-											class:text-white={i === 0}
+											class:bg-violet-400={i === 0}
+											class:text-zinc-950={i === 0}
 											class:bg-zinc-800={i > 0}
 											class:text-zinc-300={i > 0}
 										>
