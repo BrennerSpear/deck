@@ -1016,7 +1016,7 @@
 								<div 
 									class="max-w-[80%] rounded-2xl px-4 py-2.5"
 									class:bg-zinc-800={message.role === 'assistant'}
-									class:bg-violet-600={message.role === 'user'}
+									class:bg-violet-900={message.role === 'user'}
 								>
 									<p class="text-sm leading-relaxed">{message.content}</p>
 									
@@ -1083,7 +1083,7 @@
 							{#if skill}
 								<div 
 									class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs"
-									class:bg-violet-600={i === 0}
+									class:bg-violet-900={i === 0}
 									class:text-white={i === 0}
 									class:bg-zinc-800={i > 0}
 									class:text-zinc-300={i > 0}
@@ -1126,7 +1126,7 @@
 							New
 						</button>
 					{/if}
-					<div class="flex-1 relative flex items-center bg-zinc-950 border border-zinc-700 rounded-lg font-mono focus-within:ring-1 focus-within:ring-violet-500 focus-within:border-violet-500">
+					<div class="flex-1 relative flex items-center bg-zinc-950 border border-zinc-700 rounded-lg font-mono focus-within:ring-1 focus-within:ring-violet-700 focus-within:border-violet-700">
 						<!-- Terminal prompt -->
 						<span class="pl-3 text-violet-400 text-sm select-none">❯</span>
 						<!-- Inline skill bubbles (when <= 2 skills) -->
@@ -1137,7 +1137,7 @@
 									{#if skill}
 										<div 
 											class="flex items-center gap-1 px-2 py-0.5 rounded text-xs"
-											class:bg-violet-600={i === 0}
+											class:bg-violet-900={i === 0}
 											class:text-white={i === 0}
 											class:bg-zinc-800={i > 0}
 											class:text-zinc-300={i > 0}
@@ -1173,7 +1173,7 @@
 							class="flex-1 bg-transparent px-2 py-2.5 text-sm resize-none focus:outline-none placeholder:text-zinc-600 font-mono"
 						></textarea>
 					</div>
-					<button class="px-4 py-2.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-sm font-medium transition-colors flex items-center gap-2" title="Send">
+					<button class="px-4 py-2.5 rounded-lg bg-violet-900 hover:bg-violet-800 text-white text-sm font-medium transition-colors flex items-center gap-2" title="Send">
 						Send
 						<kbd class="text-violet-300 text-xs">↵</kbd>
 					</button>
