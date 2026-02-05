@@ -1173,9 +1173,9 @@
 							class="flex-1 bg-transparent px-2 py-2.5 text-sm resize-none focus:outline-none placeholder:text-zinc-600 font-mono"
 						></textarea>
 					</div>
-					<button class="px-4 py-2.5 rounded-lg bg-violet-900 hover:bg-violet-800 text-white text-sm font-medium transition-colors flex items-center gap-2" title="Send">
+					<button class="px-4 py-2.5 rounded-lg bg-violet-400 hover:bg-violet-300 text-zinc-950 text-sm font-medium transition-colors flex items-center gap-2" title="Send">
 						Send
-						<kbd class="text-violet-400 text-xs">↵</kbd>
+						<kbd class="text-zinc-700 text-xs">↵</kbd>
 					</button>
 				</div>
 				<!-- Status bar -->
