@@ -487,6 +487,11 @@
 			chatInput = '';
 			selectedSkillChain = [];
 		}
+		// Backspace when input is empty clears skill chain
+		if (e.key === 'Backspace' && chatInput === '' && selectedSkillChain.length > 0) {
+			e.preventDefault();
+			selectedSkillChain = [];
+		}
 	}
 </script>
 
