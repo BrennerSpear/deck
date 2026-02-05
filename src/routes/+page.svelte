@@ -1128,7 +1128,7 @@
 					{/if}
 					<div class="flex-1 relative flex items-center bg-zinc-950 border border-zinc-700 rounded-lg font-mono focus-within:ring-1 focus-within:ring-violet-700 focus-within:border-violet-700">
 						<!-- Terminal prompt -->
-						<span class="pl-3 text-violet-400 text-sm select-none">❯</span>
+						<span class="pl-3 text-violet-500 text-sm select-none">❯</span>
 						<!-- Inline skill bubbles (when <= 2 skills) -->
 						{#if selectedSkillChain.length > 0 && selectedSkillChain.length <= 2}
 							<div class="flex items-center gap-1 pl-2 flex-shrink-0">
