@@ -1,105 +1,60 @@
 /**
- * Tauri bridge — wraps Tauri commands with a browser fallback for dev mode.
- * When running outside Tauri (e.g., `npm run dev` in browser), it uses mock data.
+ * Tauri bridge — mock-only for the web version.
+ * The real Tauri integration lives on the `tauri` branch.
+ * This file provides mock data so the UI works in a browser.
  */
 
 import type { Project, DirEntry } from '$lib/types';
 
-// Detect if we're running inside Tauri
-function isTauri(): boolean {
-	return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
-}
-
-// ── Invoke wrapper ─────────────────────────────────────────────────────────
-
-async function invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
-	if (!isTauri()) {
-		throw new Error(`Tauri not available — cannot invoke '${cmd}'`);
-	}
-	const { invoke: tauriInvoke } = await import('@tauri-apps/api/core');
-	return tauriInvoke<T>(cmd, args);
+// Always false in the web version
+export function isTauri(): boolean {
+	return false;
 }
 
 // ── Filesystem Commands ────────────────────────────────────────────────────
 
 export async function listDir(path: string, depth: number = 2): Promise<DirEntry[]> {
-	if (!isTauri()) {
-		return mockListDir(path, depth);
-	}
-	return invoke<DirEntry[]>('list_dir', { path, depth });
+	return mockListDir(path, depth);
 }
 
 export async function readFile(path: string): Promise<string> {
-	if (!isTauri()) {
-		return mockReadFile(path);
-	}
-	return invoke<string>('read_file', { path });
+	return mockReadFile(path);
 }
 
 // ── Config Commands ────────────────────────────────────────────────────────
 
 export async function loadConfig(): Promise<Project[]> {
-	if (!isTauri()) {
-		return mockLoadConfig();
-	}
-	return invoke<Project[]>('load_config');
+	return mockLoadConfig();
 }
 
 export async function saveConfig(projects: Project[]): Promise<void> {
-	if (!isTauri()) {
-		mockSaveConfig(projects);
-		return;
-	}
-	return invoke<void>('save_config', { projects });
+	mockSaveConfig(projects);
 }
 
 // ── Watch Commands ─────────────────────────────────────────────────────────
 
-export async function watchDir(path: string, id: string): Promise<void> {
-	if (!isTauri()) return;
-	return invoke<void>('watch_dir', { path, id });
+export async function watchDir(_path: string, _id: string): Promise<void> {
+	return;
 }
 
-export async function unwatchDir(id: string): Promise<void> {
-	if (!isTauri()) return;
-	return invoke<void>('unwatch_dir', { id });
+export async function unwatchDir(_id: string): Promise<void> {
+	return;
 }
 
 // ── Dialog Commands ────────────────────────────────────────────────────────
 
 export async function pickFolder(): Promise<string | null> {
-	if (!isTauri()) {
-		// In browser dev mode, prompt for a path
-		const path = prompt('Enter a folder path (Tauri not available):');
-		return path || null;
-	}
-	const { open } = await import('@tauri-apps/plugin-dialog');
-	const selected = await open({
-		directory: true,
-		multiple: false,
-		title: 'Select a project folder',
-	});
-	return selected as string | null;
+	const path = prompt('Enter a folder path:');
+	return path || null;
 }
 
 // ── Event Listener ─────────────────────────────────────────────────────────
 
-export async function listenFsChange(id: string, callback: (event: unknown) => void): Promise<() => void> {
-	if (!isTauri()) {
-		return () => {};
-	}
-	const { listen } = await import('@tauri-apps/api/event');
-	const unlisten = await listen(`fs-change:${id}`, (event) => {
-		callback(event.payload);
-	});
-	return unlisten;
+export async function listenFsChange(_id: string, _callback: (event: unknown) => void): Promise<() => void> {
+	return () => {};
 }
 
-// ── Re-export isTauri for components ───────────────────────────────────────
-
-export { isTauri };
-
-// ── Mock implementations for browser dev mode ──────────────────────────────
+// ── Mock implementations ───────────────────────────────────────────────────
 
 let mockProjects: Project[] = [
 	{ id: 'knowhere', name: 'Knowhere', path: '/home/brenner/repos/knowhere', icon: '🏜️' },
@@ -118,7 +73,6 @@ function mockSaveConfig(projects: Project[]): void {
 }
 
 function mockListDir(path: string, depth: number): DirEntry[] {
-	// Return a realistic-looking file tree
 	return [
 		{
 			name: 'AGENTS.md',
