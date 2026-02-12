@@ -14,6 +14,7 @@
 	let fitAddon: any;
 	let pollInterval: ReturnType<typeof setInterval> | undefined;
 	let lastContent = '';
+	let isFocused = $state(false);
 
 	async function fetchPaneContent() {
 		try {
@@ -25,12 +26,32 @@
 			const data = await response.json();
 
 			if (data.content !== lastContent) {
+				// Trim trailing empty lines but preserve ANSI codes
+				const trimmedContent = data.content.replace(/\n+$/, '');
 				lastContent = data.content;
 				terminal.clear();
-				terminal.write(data.content);
+				terminal.write(trimmedContent);
+				// Scroll to bottom to show the latest content
+				terminal.scrollToBottom();
 			}
 		} catch (error) {
 			console.error('Failed to fetch pane content:', error);
+		}
+	}
+
+	async function sendKeys(keys: string) {
+		try {
+			const response = await fetch('/api/tmux/send-keys', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ paneId, keys })
+			});
+
+			if (!response.ok) {
+				console.error('Failed to send keys:', await response.text());
+			}
+		} catch (error) {
+			console.error('Failed to send keys:', error);
 		}
 	}
 
@@ -39,7 +60,6 @@
 		let disposed = false;
 
 		async function initializeTerminal() {
-			// Dynamic imports — xterm is browser-only
 			const { Terminal } = await import('@xterm/xterm');
 			const { FitAddon } = await import('@xterm/addon-fit');
 			await import('@xterm/xterm/css/xterm.css');
@@ -71,10 +91,12 @@
 				fontFamily: '"Cascadia Code", "Fira Code", "JetBrains Mono", monospace',
 				fontSize: 13,
 				cursorBlink: false,
-				disableStdin: true,
+				disableStdin: false,
+				cursorStyle: 'block',
 				convertEol: true,
-				rows: Math.floor(height / 17) || 24,
-				cols: Math.floor(width / 8) || 80
+				rows: Math.floor(height / 16) || 24,
+				cols: Math.floor(width / 9) || 80,
+				scrollback: 1000
 			});
 
 			fitAddon = new FitAddon();
@@ -82,6 +104,23 @@
 
 			terminal.open(terminalContainer);
 			fitAddon.fit();
+
+			// Enable input handling
+			terminal.onData((data: string) => {
+				void sendKeys(data);
+			});
+
+			// Track focus via textarea element
+			const textarea = terminal.textarea;
+			if (textarea) {
+				textarea.addEventListener('focus', () => {
+					isFocused = true;
+				});
+				textarea.addEventListener('blur', () => {
+					isFocused = false;
+				});
+			}
+
 			await fetchPaneContent();
 
 			pollInterval = setInterval(fetchPaneContent, 500);
@@ -102,7 +141,13 @@
 	});
 </script>
 
-<div bind:this={terminalContainer} class="w-full h-64 bg-zinc-950"></div>
+<div 
+	bind:this={terminalContainer} 
+	class="w-full h-64 bg-zinc-950 relative"
+	class:ring-2={isFocused}
+	class:ring-violet-400={isFocused}
+	class:ring-opacity-50={isFocused}
+></div>
 
 <style>
 	:global(.xterm) {
@@ -111,5 +156,14 @@
 
 	:global(.xterm-viewport) {
 		overflow-y: hidden !important;
+	}
+
+	/* Completely hide xterm cursor - it doesn't match tmux cursor position.
+	   Users can still type and it goes to the correct place in the real tmux session. */
+	:global(.xterm-cursor),
+	:global(.xterm-cursor-block),
+	:global(.xterm-cursor-bar),
+	:global(.xterm-cursor-underline) {
+		display: none !important;
 	}
 </style>

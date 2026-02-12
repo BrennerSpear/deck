@@ -176,3 +176,33 @@ export function extractLastLogLine(content: string): string {
 
 	return lines[lines.length - 1] ?? '';
 }
+
+export interface PaneCursorPosition {
+	x: number;
+	y: number;
+}
+
+/**
+ * Get cursor position for a specific pane.
+ * Note: cursor_y is relative to the visible pane area (0 to pane_height-1)
+ */
+export async function getPaneCursorPosition(paneId: string): Promise<PaneCursorPosition> {
+	// -f filters to only the specific pane
+	const format = '#{cursor_x}\t#{cursor_y}';
+	const output = await runTmux([
+		'list-panes',
+		'-F', format,
+		'-f', `#{==:#{pane_id},${paneId}}`
+	]);
+
+	const trimmed = output.trim();
+	if (!trimmed) {
+		return { x: 0, y: 0 }; // Fallback if pane not found
+	}
+
+	const [xStr, yStr] = trimmed.split('\t');
+	return {
+		x: toNumber(xStr) ?? 0,
+		y: toNumber(yStr) ?? 0
+	};
+}

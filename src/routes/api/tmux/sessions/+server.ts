@@ -1,7 +1,10 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import path from 'node:path';
 import type { TmuxSessionsState } from '$lib/types';
 import {
 	captureTmuxPaneTail,
@@ -18,6 +21,8 @@ import {
 	listTmuxPanes,
 	listTmuxSessions
 } from '$lib/server/tmux';
+
+const execFileAsync = promisify(execFile);
 
 const STATE_FILE = `${process.env.HOME ?? ''}/.openclaw/workspace/state/tmux-sessions.json`;
 
@@ -136,6 +141,84 @@ export const DELETE: RequestHandler = async ({ url }) => {
 		if (isTmuxTargetMissingError(error) || isTmuxServerNotRunningError(error)) {
 			return json({ error: `Session "${sessionName}" not found.` }, { status: 404 });
 		}
+		if (isTmuxNotInstalledError(error)) {
+			return json({ error: 'tmux is not installed on this machine.' }, { status: 503 });
+		}
+		return json({ error: formatTmuxError(error) }, { status: 500 });
+	}
+};
+
+interface CreateSessionRequest {
+	name: string;
+	command: string;
+	cwd: string;
+}
+
+async function ensureStateDir(): Promise<string> {
+	const stateDir = path.join(process.env.HOME ?? '', '.openclaw', 'workspace', 'state');
+	if (!existsSync(stateDir)) {
+		await mkdir(stateDir, { recursive: true });
+	}
+	return stateDir;
+}
+
+async function loadTmuxSessionsState(): Promise<TmuxSessionsState> {
+	const stateFile = path.join(await ensureStateDir(), 'tmux-sessions.json');
+	if (!existsSync(stateFile)) return { sessions: {} };
+
+	try {
+		const content = await readFile(stateFile, 'utf-8');
+		return JSON.parse(content);
+	} catch {
+		return { sessions: {} };
+	}
+}
+
+async function saveTmuxSessionsState(state: TmuxSessionsState): Promise<void> {
+	const stateFile = path.join(await ensureStateDir(), 'tmux-sessions.json');
+	await writeFile(stateFile, JSON.stringify(state, null, 2), 'utf-8');
+}
+
+export const POST: RequestHandler = async ({ request }) => {
+	let body: CreateSessionRequest;
+	try {
+		body = await request.json() as CreateSessionRequest;
+	} catch {
+		return json({ error: 'Invalid JSON body' }, { status: 400 });
+	}
+
+	const { name, command, cwd } = body;
+
+	if (!name || !command) {
+		return json({ error: 'Session name and command are required' }, { status: 400 });
+	}
+
+	try {
+		// Create tmux session with a shell first, then send the command
+		// Use -d to detach initially, -c for working directory
+		// Start with bash/zsh to keep session alive, then send command via send-keys
+		const shell = process.env.SHELL ?? '/bin/bash';
+		const args = ['new-session', '-d', '-s', name, '-c', cwd ?? process.env.HOME ?? '/', shell];
+
+		await execFileAsync('tmux', args);
+
+		// Send the command to the session and press Enter
+		await execFileAsync('tmux', ['send-keys', '-t', name, command, 'Enter']);
+
+		// Save session metadata
+		const state = await loadTmuxSessionsState();
+		state.sessions[name] = {
+			name,
+			agent: command.includes('codex') ? 'codex' : 'claude',
+			repo: cwd ?? '~',
+			created: new Date().toISOString(),
+			lastUsed: new Date().toISOString(),
+			status: 'running'
+		};
+		await saveTmuxSessionsState(state);
+
+		return json({ success: true, sessionName: name });
+	} catch (error) {
 		if (isTmuxNotInstalledError(error)) {
 			return json({ error: 'tmux is not installed on this machine.' }, { status: 503 });
 		}

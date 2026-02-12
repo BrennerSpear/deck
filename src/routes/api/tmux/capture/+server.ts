@@ -3,14 +3,11 @@ import type { RequestHandler } from './$types';
 import {
 	captureTmuxPane,
 	formatTmuxError,
+	getPaneCursorPosition,
 	isTmuxNotInstalledError,
 	isTmuxServerNotRunningError,
 	isTmuxTargetMissingError
 } from '$lib/server/tmux';
-
-async function capturePaneContent(paneId: string): Promise<string> {
-	return captureTmuxPane(paneId);
-}
 
 export const GET: RequestHandler = async ({ url }) => {
 	const paneId = url.searchParams.get('pane');
@@ -20,15 +17,28 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	try {
-		const content = await capturePaneContent(paneId);
-		return json({ content });
+		// Fetch both content and cursor position in parallel
+		const [content, cursor] = await Promise.all([
+			captureTmuxPane(paneId),
+			getPaneCursorPosition(paneId)
+		]);
+
+		return json({ content, cursor });
 	} catch (error) {
 		if (isTmuxServerNotRunningError(error) || isTmuxTargetMissingError(error)) {
-			return json({ content: '' });
+			return json({ content: '', cursor: { x: 0, y: 0 } });
 		}
 		if (isTmuxNotInstalledError(error)) {
-			return json({ content: '', error: 'tmux is not installed on this machine.' }, { status: 503 });
+			return json({
+				content: '',
+				cursor: { x: 0, y: 0 },
+				error: 'tmux is not installed on this machine.'
+			}, { status: 503 });
 		}
-		return json({ content: '', error: formatTmuxError(error) }, { status: 500 });
+		return json({
+			content: '',
+			cursor: { x: 0, y: 0 },
+			error: formatTmuxError(error)
+		}, { status: 500 });
 	}
 };

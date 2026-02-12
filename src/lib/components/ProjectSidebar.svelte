@@ -113,22 +113,17 @@
 			>
 				<span class="text-lg flex-shrink-0">{project.icon}</span>
 				{#if !sidebarCollapsed}
-					<div class="flex flex-col min-w-0 flex-1">
+					<div class="flex items-center gap-2 min-w-0 flex-1">
 						<span class="truncate text-sm font-medium">{project.name}</span>
-						<div class="flex items-center gap-1.5 mt-0.5">
-							<div class="flex items-center gap-0.5" title={`${counts.running} running`}>
-								{#each renderDots(counts.running) as _}
-									<span class="w-2 h-2 rounded-full bg-blue-500"></span>
-								{/each}
-							</div>
-							<div class="flex items-center gap-0.5" title={`${counts.waiting} waiting`}>
-								{#each renderDots(counts.waiting) as _}
-									<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-								{/each}
-							</div>
-							{#if counts.open > 0}
-								<span class="text-[10px] text-zinc-500 ml-1">{counts.open} open</span>
-							{/if}
+						<div class="flex items-center gap-0.5" title={`${counts.running} running`}>
+							{#each renderDots(counts.running) as _}
+								<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+							{/each}
+						</div>
+						<div class="flex items-center gap-0.5" title={`${counts.waiting} waiting`}>
+							{#each renderDots(counts.waiting) as _}
+								<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+							{/each}
 						</div>
 					</div>
 					<button
