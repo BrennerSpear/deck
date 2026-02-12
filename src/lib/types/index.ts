@@ -75,3 +75,46 @@ export interface Model {
 // ── File Position ──────────────────────────────────────────────────────────
 
 export type FilePosition = 'left' | 'right' | 'above';
+
+// ── Tmux Mission Control Types ────────────────────────────────────────────
+
+export interface TmuxSession {
+	name: string;
+	agent: 'claude' | 'codex';
+	repo: string;
+	systemPrompt?: string;
+	topic?: string;
+	created: string;
+	lastUsed: string;
+	status: 'running' | 'idle' | 'done' | 'killed';
+}
+
+export interface TmuxPane {
+	id: string;
+	width: number;
+	height: number;
+	currentCommand: string;
+	currentPath?: string;
+}
+
+export interface TmuxSessionsState {
+	sessions: Record<string, TmuxSession>;
+}
+
+export interface AgentEvent {
+	timestamp: string;
+	type: 'teammate-idle' | 'task-completed';
+	agent?: string;
+	message: string;
+	repo?: string;
+}
+
+export interface TmuxStreamMessage {
+	type: 'pane-update' | 'session-update' | 'agent-event' | 'error';
+	sessionName?: string;
+	paneId?: string;
+	content?: string;
+	sessions?: Record<string, TmuxSession>;
+	event?: AgentEvent;
+	error?: string;
+}
