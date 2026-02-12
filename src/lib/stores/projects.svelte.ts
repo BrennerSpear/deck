@@ -12,6 +12,7 @@ let projects = $state<Project[]>([]);
 let selectedProjectId = $state<string | null>(null);
 let projectTrees = $state<Record<string, DirEntry[]>>({});
 let loading = $state(false);
+let reposRoot = $state('~/repos');
 
 // ── File Trees ─────────────────────────────────────────────────────────────
 
@@ -264,14 +265,32 @@ let conversations = $state<Conversation[]>(mockConversations);
 async function init() {
 	loading = true;
 	try {
+		reposRoot = tauri.getReposRoot();
 		const loaded = await tauri.loadConfig();
 		projects = loaded;
-		if (loaded.length > 0 && !selectedProjectId) {
+
+		const nextTrees: Record<string, DirEntry[]> = {};
+		for (const project of loaded) {
+			const existingTree = projectTrees[project.id];
+			if (existingTree) {
+				nextTrees[project.id] = existingTree;
+			}
+		}
+		projectTrees = nextTrees;
+
+		if (loaded.length === 0) {
+			selectedProjectId = null;
+			projectTrees = {};
+			return;
+		}
+
+		const stillExists = loaded.some((project) => project.id === selectedProjectId);
+		if (!selectedProjectId || !stillExists) {
 			selectedProjectId = loaded[0].id;
 		}
-		// Load file trees for all projects
-		for (const p of loaded) {
-			await refreshProjectTree(p.id);
+
+		if (selectedProjectId) {
+			await refreshProjectTree(selectedProjectId);
 		}
 	} catch (e) {
 		console.error('Failed to load config:', e);
@@ -297,7 +316,6 @@ async function addProject(path: string, name?: string, icon?: string): Promise<P
 	};
 
 	projects = [...projects, project];
-	await tauri.saveConfig(projects);
 	await refreshProjectTree(id);
 
 	// Select the new project
@@ -309,7 +327,6 @@ async function addProject(path: string, name?: string, icon?: string): Promise<P
 async function removeProject(id: string) {
 	projects = projects.filter(p => p.id !== id);
 	delete projectTrees[id];
-	await tauri.saveConfig(projects);
 
 	if (selectedProjectId === id) {
 		selectedProjectId = projects[0]?.id ?? null;
@@ -331,6 +348,9 @@ async function refreshProjectTree(projectId: string) {
 
 function selectProject(id: string) {
 	selectedProjectId = id;
+	if (!projectTrees[id]) {
+		refreshProjectTree(id);
+	}
 }
 
 async function addProjectViaDialog() {
@@ -340,6 +360,16 @@ async function addProjectViaDialog() {
 	}
 }
 
+async function setReposRoot(nextRoot: string) {
+	tauri.setReposRoot(nextRoot);
+	reposRoot = tauri.getReposRoot();
+	await init();
+}
+
+async function refreshProjects() {
+	await init();
+}
+
 // ── Export reactive getters and actions ─────────────────────────────────────
 
 export const projectStore = {
@@ -347,6 +377,7 @@ export const projectStore = {
 	get selectedProjectId() { return selectedProjectId; },
 	get selectedProject() { return projects.find(p => p.id === selectedProjectId) ?? null; },
 	get loading() { return loading; },
+	get reposRoot() { return reposRoot; },
 	get conversations() { return conversations; },
 
 	getProjectTree,
@@ -360,4 +391,6 @@ export const projectStore = {
 	refreshProjectTree,
 	selectProject,
 	addProjectViaDialog,
+	setReposRoot,
+	refreshProjects,
 };

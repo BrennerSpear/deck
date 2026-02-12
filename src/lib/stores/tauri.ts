@@ -1,34 +1,103 @@
 /**
- * Tauri bridge — mock-only for the web version.
- * The real Tauri integration lives on the `tauri` branch.
- * This file provides mock data so the UI works in a browser.
+ * Web bridge for filesystem/project APIs.
+ * In Tauri this would use native commands; in web we call SvelteKit endpoints.
  */
 
 import type { Project, DirEntry } from '$lib/types';
 
-// Always false in the web version
+const REPOS_ROOT_STORAGE_KEY = 'deck.reposRoot';
+const DEFAULT_REPOS_ROOT = '~/repos';
+
+let configuredReposRoot = DEFAULT_REPOS_ROOT;
+let reposRootInitialized = false;
+
+function ensureReposRootInitialized() {
+	if (reposRootInitialized) return;
+	reposRootInitialized = true;
+	if (typeof window === 'undefined') return;
+	const stored = localStorage.getItem(REPOS_ROOT_STORAGE_KEY);
+	if (stored && stored.trim()) {
+		configuredReposRoot = stored.trim();
+	}
+}
+
+function persistReposRoot() {
+	if (typeof window === 'undefined') return;
+	localStorage.setItem(REPOS_ROOT_STORAGE_KEY, configuredReposRoot);
+}
+
 export function isTauri(): boolean {
 	return false;
+}
+
+export function getReposRoot(): string {
+	ensureReposRootInitialized();
+	return configuredReposRoot;
+}
+
+export function setReposRoot(root: string): void {
+	ensureReposRootInitialized();
+	const trimmed = root.trim();
+	configuredReposRoot = trimmed || DEFAULT_REPOS_ROOT;
+	persistReposRoot();
 }
 
 // ── Filesystem Commands ────────────────────────────────────────────────────
 
 export async function listDir(path: string, depth: number = 2): Promise<DirEntry[]> {
-	return mockListDir(path, depth);
+	try {
+		const root = getReposRoot();
+		const response = await fetch(
+			`/api/fs/list?path=${encodeURIComponent(path)}&depth=${encodeURIComponent(String(depth))}&root=${encodeURIComponent(root)}`
+		);
+		if (!response.ok) {
+			throw new Error(`Failed to list directory: ${response.status}`);
+		}
+		const data = await response.json();
+		return data.entries as DirEntry[];
+	} catch {
+		return mockListDir(path, depth);
+	}
 }
 
 export async function readFile(path: string): Promise<string> {
-	return mockReadFile(path);
+	try {
+		const root = getReposRoot();
+		const response = await fetch(
+			`/api/fs/read?path=${encodeURIComponent(path)}&root=${encodeURIComponent(root)}`
+		);
+		if (!response.ok) {
+			throw new Error(`Failed to read file: ${response.status}`);
+		}
+		const data = await response.json();
+		return data.content as string;
+	} catch {
+		return mockReadFile(path);
+	}
 }
 
 // ── Config Commands ────────────────────────────────────────────────────────
 
 export async function loadConfig(): Promise<Project[]> {
-	return mockLoadConfig();
+	try {
+		const root = getReposRoot();
+		const response = await fetch(`/api/projects?root=${encodeURIComponent(root)}`);
+		if (!response.ok) {
+			throw new Error(`Failed to load projects: ${response.status}`);
+		}
+		const data = await response.json();
+		if (typeof data.root === 'string' && data.root.trim()) {
+			configuredReposRoot = data.root.trim();
+			persistReposRoot();
+		}
+		return (data.projects as Project[]) ?? [];
+	} catch {
+		return mockLoadConfig();
+	}
 }
 
-export async function saveConfig(projects: Project[]): Promise<void> {
-	mockSaveConfig(projects);
+export async function saveConfig(_projects: Project[]): Promise<void> {
+	return;
 }
 
 // ── Watch Commands ─────────────────────────────────────────────────────────
@@ -66,10 +135,6 @@ let mockProjects: Project[] = [
 
 function mockLoadConfig(): Project[] {
 	return [...mockProjects];
-}
-
-function mockSaveConfig(projects: Project[]): void {
-	mockProjects = [...projects];
 }
 
 function mockListDir(path: string, depth: number): DirEntry[] {
