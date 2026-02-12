@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @theme {
 	--color-zinc-850: #1f1f23;
@@ -26,8 +27,8 @@
 	background: #52525b;
 }
 
-/* Smooth transitions */
-* {
+/* Smooth transitions - only for interactive elements, not layout */
+button, a, input, select, textarea {
 	transition-property: background-color, border-color, color, opacity;
 	transition-duration: 150ms;
 	transition-timing-function: ease;

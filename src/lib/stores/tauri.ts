@@ -1,0 +1,143 @@
+/**
+ * Tauri bridge — mock-only for the web version.
+ * The real Tauri integration lives on the `tauri` branch.
+ * This file provides mock data so the UI works in a browser.
+ */
+
+import type { Project, DirEntry } from '$lib/types';
+
+// Always false in the web version
+export function isTauri(): boolean {
+	return false;
+}
+
+// ── Filesystem Commands ────────────────────────────────────────────────────
+
+export async function listDir(path: string, depth: number = 2): Promise<DirEntry[]> {
+	return mockListDir(path, depth);
+}
+
+export async function readFile(path: string): Promise<string> {
+	return mockReadFile(path);
+}
+
+// ── Config Commands ────────────────────────────────────────────────────────
+
+export async function loadConfig(): Promise<Project[]> {
+	return mockLoadConfig();
+}
+
+export async function saveConfig(projects: Project[]): Promise<void> {
+	mockSaveConfig(projects);
+}
+
+// ── Watch Commands ─────────────────────────────────────────────────────────
+
+export async function watchDir(_path: string, _id: string): Promise<void> {
+	return;
+}
+
+export async function unwatchDir(_id: string): Promise<void> {
+	return;
+}
+
+// ── Dialog Commands ────────────────────────────────────────────────────────
+
+export async function pickFolder(): Promise<string | null> {
+	const path = prompt('Enter a folder path:');
+	return path || null;
+}
+
+// ── Event Listener ─────────────────────────────────────────────────────────
+
+export async function listenFsChange(_id: string, _callback: (event: unknown) => void): Promise<() => void> {
+	return () => {};
+}
+
+// ── Mock implementations ───────────────────────────────────────────────────
+
+let mockProjects: Project[] = [
+	{ id: 'knowhere', name: 'Knowhere', path: '/home/brenner/repos/knowhere', icon: '🏜️' },
+	{ id: 'agentboard', name: 'AgentBoard', path: '/home/brenner/repos/agentboard', icon: '📋' },
+	{ id: 'clarity', name: 'Clarity', path: '/home/brenner/repos/clarity', icon: '💎' },
+	{ id: 'openclaw', name: 'OpenClaw', path: '/home/brenner/repos/openclaw', icon: '🦎' },
+	{ id: 'research', name: 'Research', path: '/home/brenner/repos/research', icon: '🔬' },
+];
+
+function mockLoadConfig(): Project[] {
+	return [...mockProjects];
+}
+
+function mockSaveConfig(projects: Project[]): void {
+	mockProjects = [...projects];
+}
+
+function mockListDir(path: string, depth: number): DirEntry[] {
+	return [
+		{
+			name: 'AGENTS.md',
+			path: `${path}/AGENTS.md`,
+			is_dir: false,
+			is_file: true,
+			size: 4200,
+		},
+		{
+			name: 'skills',
+			path: `${path}/skills`,
+			is_dir: true,
+			is_file: false,
+			children: depth > 0 ? [
+				{ name: 'research', path: `${path}/skills/research`, is_dir: true, is_file: false, children: [
+					{ name: 'SKILL.md', path: `${path}/skills/research/SKILL.md`, is_dir: false, is_file: true, size: 1200 },
+				]},
+				{ name: 'commit', path: `${path}/skills/commit`, is_dir: true, is_file: false, children: [
+					{ name: 'SKILL.md', path: `${path}/skills/commit/SKILL.md`, is_dir: false, is_file: true, size: 800 },
+				]},
+				{ name: 'develop', path: `${path}/skills/develop`, is_dir: true, is_file: false, children: [
+					{ name: 'SKILL.md', path: `${path}/skills/develop/SKILL.md`, is_dir: false, is_file: true, size: 2000 },
+				]},
+			] : undefined,
+		},
+		{
+			name: 'hooks',
+			path: `${path}/hooks`,
+			is_dir: true,
+			is_file: false,
+			children: depth > 0 ? [
+				{ name: 'pre-commit.md', path: `${path}/hooks/pre-commit.md`, is_dir: false, is_file: true, size: 600 },
+				{ name: 'post-push.md', path: `${path}/hooks/post-push.md`, is_dir: false, is_file: true, size: 500 },
+			] : undefined,
+		},
+		{
+			name: 'context',
+			path: `${path}/context`,
+			is_dir: true,
+			is_file: false,
+			children: depth > 0 ? [
+				{ name: 'architecture.md', path: `${path}/context/architecture.md`, is_dir: false, is_file: true, size: 1500 },
+				{ name: 'conventions.md', path: `${path}/context/conventions.md`, is_dir: false, is_file: true, size: 900 },
+			] : undefined,
+		},
+		{
+			name: 'README.md',
+			path: `${path}/README.md`,
+			is_dir: false,
+			is_file: true,
+			size: 2000,
+		},
+	];
+}
+
+function mockReadFile(path: string): string {
+	if (path.includes('AGENTS.md')) {
+		return `# AGENTS.md\n\nThis is the agent configuration for the project.\n\n## Skills\n\nAvailable skills are defined in the \`skills/\` directory.\n\n## Hooks\n\nHooks are defined in the \`hooks/\` directory.\n`;
+	}
+	if (path.includes('SKILL.md') || path.includes('skills/')) {
+		const name = path.split('/').slice(-2, -1)[0] || 'unknown';
+		return `---\nname: ${name}\ndescription: A skill for ${name}\n---\n\n# ${name}\n\nThis skill handles ${name} operations.\n`;
+	}
+	if (path.includes('README.md')) {
+		return `# Project\n\nThis is a project managed by Deck.\n`;
+	}
+	return `# ${path.split('/').pop()}\n\nFile contents would be loaded from disk when running in Tauri.\n`;
+}
