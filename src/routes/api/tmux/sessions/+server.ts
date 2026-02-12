@@ -4,9 +4,12 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import type { TmuxSessionsState } from '$lib/types';
 import {
+	captureTmuxPaneTail,
 	epochToIso,
+	extractLastLogLine,
 	formatTmuxError,
 	inferAgent,
+	inferActivityState,
 	inferStatus,
 	isTmuxNotInstalledError,
 	isTmuxServerNotRunningError,
@@ -59,26 +62,49 @@ export const GET: RequestHandler = async () => {
 		}
 
 		const sessions: TmuxSessionsState['sessions'] = {};
-
-		for (const live of liveSessions) {
-			const metadata = state.sessions[live.name];
-			const paneList = panesBySession.get(live.name) ?? [];
-			const activePane = paneList.find((pane) => pane.isActive) ?? paneList[0];
-			const currentCommand = activePane?.currentCommand;
-
-			sessions[live.name] = {
-				name: live.name,
-				agent: metadata?.agent ?? inferAgent(live.name, currentCommand),
-				repo: metadata?.repo ?? activePane?.currentPath ?? '~',
-				systemPrompt: metadata?.systemPrompt,
-				topic: metadata?.topic,
-				created: metadata?.created ?? epochToIso(live.createdEpoch),
-				lastUsed: epochToIso(live.activityEpoch),
-				status:
+		const sessionEntries = await Promise.all(
+			liveSessions.map(async (live) => {
+				const metadata = state.sessions[live.name];
+				const paneList = panesBySession.get(live.name) ?? [];
+				const activePane = paneList.find((pane) => pane.isActive) ?? paneList[0];
+				const currentCommand = activePane?.currentCommand;
+				const inferredStatus = inferStatus(live.activityEpoch, live.attachedClients, currentCommand);
+				const status =
 					metadata?.status === 'running' || metadata?.status === 'idle'
 						? metadata.status
-						: inferStatus(live.activityEpoch, live.attachedClients, currentCommand)
-			};
+						: inferredStatus;
+				let lastLine = '';
+				if (activePane?.id) {
+					try {
+						const tail = await captureTmuxPaneTail(activePane.id, 40);
+						lastLine = extractLastLogLine(tail);
+					} catch (captureError) {
+						if (!isTmuxTargetMissingError(captureError)) {
+							console.error(`Failed to capture preview for ${live.name}:`, captureError);
+						}
+					}
+				}
+
+				const session = {
+					name: live.name,
+					agent: metadata?.agent ?? inferAgent(live.name, currentCommand),
+					repo: metadata?.repo ?? activePane?.currentPath ?? '~',
+					systemPrompt: metadata?.systemPrompt,
+					topic: metadata?.topic,
+					created: metadata?.created ?? epochToIso(live.createdEpoch),
+					lastUsed: epochToIso(live.activityEpoch),
+					status,
+					currentCommand,
+					activePaneId: activePane?.id,
+					lastLine,
+					activityState: status === 'running' ? inferActivityState(currentCommand) : 'waiting'
+				};
+				return [live.name, session] as const;
+			})
+		);
+
+		for (const [sessionName, session] of sessionEntries) {
+			sessions[sessionName] = session;
 		}
 
 		return json({ sessions });

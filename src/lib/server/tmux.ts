@@ -128,6 +128,11 @@ export async function captureTmuxPane(paneId: string): Promise<string> {
 	return runTmux(['capture-pane', '-p', '-e', '-S', '-200', '-E', '-', '-t', paneId]);
 }
 
+export async function captureTmuxPaneTail(paneId: string, lineCount: number = 40): Promise<string> {
+	const start = `-${Math.max(1, lineCount)}`;
+	return runTmux(['capture-pane', '-p', '-e', '-S', start, '-E', '-', '-t', paneId]);
+}
+
 export async function killTmuxSession(sessionName: string): Promise<void> {
 	await runTmux(['kill-session', '-t', sessionName]);
 }
@@ -150,4 +155,24 @@ export function inferStatus(activityEpoch: number | null, attachedClients: numbe
 	const ageMs = Date.now() - activityEpoch * 1000;
 	if (ageMs > 10 * 60 * 1000) return 'idle' as const;
 	return 'running' as const;
+}
+
+export function inferActivityState(command: string | undefined): 'running' | 'waiting' {
+	if (command && !SHELL_COMMANDS.has(command)) {
+		return 'running';
+	}
+	return 'waiting';
+}
+
+function stripAnsi(input: string): string {
+	return input.replace(/\x1b\[[0-9;?]*[ -/]*[@-~]/g, '');
+}
+
+export function extractLastLogLine(content: string): string {
+	const lines = content
+		.split('\n')
+		.map((line) => stripAnsi(line).trim())
+		.filter((line) => line.length > 0);
+
+	return lines[lines.length - 1] ?? '';
 }

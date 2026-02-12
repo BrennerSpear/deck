@@ -87,6 +87,10 @@ export interface TmuxSession {
 	created: string;
 	lastUsed: string;
 	status: 'running' | 'idle' | 'done' | 'killed';
+	currentCommand?: string;
+	activePaneId?: string;
+	lastLine?: string;
+	activityState?: 'running' | 'waiting';
 }
 
 export interface TmuxPane {

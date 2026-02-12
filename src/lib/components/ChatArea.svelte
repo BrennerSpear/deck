@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { projectStore } from '$lib/stores/projects.svelte';
-	import type { TmuxSession } from '$lib/types';
+	import type { TmuxPane, TmuxSession } from '$lib/types';
+	import TerminalPane from '$lib/components/TerminalPane.svelte';
+	import { getSessionActivityLabel, sessionBelongsToProject } from '$lib/tmux-session-utils';
 
 	let sessions = $state<Record<string, TmuxSession>>({});
+	let sessionPanes = $state<Record<string, TmuxPane[]>>({});
+	let expandedSession = $state<string | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 	let pollInterval: ReturnType<typeof setInterval> | undefined;
@@ -16,7 +20,7 @@
 		const result: TmuxSession[] = [];
 		for (const session of Object.values(sessions)) {
 			if (session.status !== 'running' && session.status !== 'idle') continue;
-			if (!belongsToProject(session, selectedProject.path)) continue;
+			if (!sessionBelongsToProject(session, selectedProject.path)) continue;
 			result.push(session);
 		}
 
@@ -33,26 +37,6 @@
 	const runningSessions = $derived(projectSessions.filter((session) => session.status === 'running'));
 	const idleSessions = $derived(projectSessions.filter((session) => session.status === 'idle'));
 
-	function normalizePath(input: string): string {
-		return input.replace(/\\/g, '/').replace(/\/+$/, '').toLowerCase();
-	}
-
-	function getFolderName(input: string): string {
-		const normalized = normalizePath(input);
-		const parts = normalized.split('/').filter(Boolean);
-		return parts[parts.length - 1] ?? normalized;
-	}
-
-	function belongsToProject(session: TmuxSession, projectPath: string): boolean {
-		const normalizedProjectPath = normalizePath(projectPath);
-		const normalizedRepoPath = normalizePath(session.repo || '');
-
-		if (normalizedRepoPath === normalizedProjectPath) return true;
-		if (normalizedRepoPath.startsWith(`${normalizedProjectPath}/`)) return true;
-
-		return getFolderName(normalizedRepoPath) === getFolderName(normalizedProjectPath);
-	}
-
 	function formatRelativeTime(timestamp: string): string {
 		const deltaMs = Date.now() - new Date(timestamp).getTime();
 		const deltaMinutes = Math.floor(deltaMs / (60 * 1000));
@@ -68,6 +52,18 @@
 		return agent === 'codex' ? '⚡' : '🤖';
 	}
 
+	function getSessionStatusLabel(session: TmuxSession): string {
+		return getSessionActivityLabel(session) === 'running' ? 'running' : 'waiting for input';
+	}
+
+	function getSessionStatusClass(session: TmuxSession): string {
+		return getSessionActivityLabel(session) === 'running' ? 'text-emerald-400' : 'text-amber-400';
+	}
+
+	function getSessionPreview(session: TmuxSession): string {
+		return session.lastLine || session.topic || session.currentCommand || 'No recent output';
+	}
+
 	async function fetchSessions() {
 		try {
 			const response = await fetch('/api/tmux/sessions');
@@ -79,11 +75,39 @@
 			const payload = await response.json();
 			sessions = payload.sessions ?? {};
 			error = null;
+
+			if (expandedSession && !sessions[expandedSession]) {
+				expandedSession = null;
+			}
 		} catch (fetchError) {
 			error = fetchError instanceof Error ? fetchError.message : 'Failed to load tmux sessions';
 		} finally {
 			loading = false;
 		}
+	}
+
+	async function fetchPanes(sessionName: string) {
+		try {
+			const response = await fetch(`/api/tmux/panes?session=${encodeURIComponent(sessionName)}`);
+			if (!response.ok) {
+				const payload = await response.json();
+				throw new Error(payload.error ?? `Failed to load panes for ${sessionName}`);
+			}
+			const payload = await response.json();
+			sessionPanes[sessionName] = payload.panes ?? [];
+		} catch (paneError) {
+			error = paneError instanceof Error ? paneError.message : 'Failed to load session panes';
+		}
+	}
+
+	async function toggleSession(sessionName: string) {
+		if (expandedSession === sessionName) {
+			expandedSession = null;
+			return;
+		}
+
+		expandedSession = sessionName;
+		await fetchPanes(sessionName);
 	}
 
 	// Kept for compatibility with existing parent wiring.
@@ -139,23 +163,45 @@
 					<div class="space-y-2">
 						<div class="text-xs uppercase tracking-wider text-zinc-500">Running ({runningSessions.length})</div>
 						{#each runningSessions as session}
-							<div class="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2.5">
-								<div class="flex items-start justify-between gap-3">
-									<div class="min-w-0">
-										<div class="flex items-center gap-2 text-sm">
-											<span>{getAgentIcon(session.agent)}</span>
-											<span class="font-medium truncate">{session.name}</span>
+							<div class="rounded-lg border border-zinc-800 bg-zinc-900 overflow-hidden">
+								<button
+									type="button"
+									class="w-full px-3 py-2.5 text-left hover:bg-zinc-850/70 transition-colors"
+									onclick={() => toggleSession(session.name)}
+								>
+									<div class="flex items-start justify-between gap-3">
+										<div class="min-w-0">
+											<div class="flex items-center gap-2 text-sm">
+												<span>{getAgentIcon(session.agent)}</span>
+												<span class="font-medium truncate">{session.name}</span>
+											</div>
+											<div class="text-xs text-zinc-400 truncate mt-1">{getSessionPreview(session)}</div>
+											<div class="text-[11px] text-zinc-500 truncate mt-1">{session.repo}</div>
 										</div>
-										<div class="text-xs text-zinc-500 truncate mt-1">{session.repo}</div>
-										{#if session.topic}
-											<div class="text-xs text-zinc-400 mt-1 truncate">{session.topic}</div>
+										<div class="text-right flex-shrink-0">
+											<div class="text-[11px] {getSessionStatusClass(session)}">{getSessionStatusLabel(session)}</div>
+											<div class="text-[11px] text-zinc-500">{formatRelativeTime(session.lastUsed)}</div>
+										</div>
+									</div>
+								</button>
+
+								{#if expandedSession === session.name}
+									<div class="border-t border-zinc-800 p-3 bg-zinc-950 space-y-3">
+										{#if sessionPanes[session.name]?.length > 0}
+											{#each sessionPanes[session.name] as pane}
+												<div class="rounded-md border border-zinc-800 overflow-hidden">
+													<div class="px-3 py-1.5 text-[11px] bg-zinc-900 border-b border-zinc-800 text-zinc-400 flex items-center justify-between">
+														<span>Pane {pane.id}</span>
+														<span>{pane.currentCommand}</span>
+													</div>
+													<TerminalPane paneId={pane.id} width={pane.width} height={pane.height} />
+												</div>
+											{/each}
+										{:else}
+											<div class="text-xs text-zinc-500">No panes found.</div>
 										{/if}
 									</div>
-									<div class="text-right flex-shrink-0">
-										<div class="text-[11px] text-emerald-400">running</div>
-										<div class="text-[11px] text-zinc-500">{formatRelativeTime(session.lastUsed)}</div>
-									</div>
-								</div>
+								{/if}
 							</div>
 						{/each}
 					</div>
@@ -165,23 +211,45 @@
 					<div class="space-y-2">
 						<div class="text-xs uppercase tracking-wider text-zinc-500">Idle ({idleSessions.length})</div>
 						{#each idleSessions as session}
-							<div class="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2.5">
-								<div class="flex items-start justify-between gap-3">
-									<div class="min-w-0">
-										<div class="flex items-center gap-2 text-sm">
-											<span>{getAgentIcon(session.agent)}</span>
-											<span class="font-medium truncate">{session.name}</span>
+							<div class="rounded-lg border border-zinc-800 bg-zinc-900 overflow-hidden">
+								<button
+									type="button"
+									class="w-full px-3 py-2.5 text-left hover:bg-zinc-850/70 transition-colors"
+									onclick={() => toggleSession(session.name)}
+								>
+									<div class="flex items-start justify-between gap-3">
+										<div class="min-w-0">
+											<div class="flex items-center gap-2 text-sm">
+												<span>{getAgentIcon(session.agent)}</span>
+												<span class="font-medium truncate">{session.name}</span>
+											</div>
+											<div class="text-xs text-zinc-400 truncate mt-1">{getSessionPreview(session)}</div>
+											<div class="text-[11px] text-zinc-500 truncate mt-1">{session.repo}</div>
 										</div>
-										<div class="text-xs text-zinc-500 truncate mt-1">{session.repo}</div>
-										{#if session.topic}
-											<div class="text-xs text-zinc-400 mt-1 truncate">{session.topic}</div>
+										<div class="text-right flex-shrink-0">
+											<div class="text-[11px] {getSessionStatusClass(session)}">{getSessionStatusLabel(session)}</div>
+											<div class="text-[11px] text-zinc-500">{formatRelativeTime(session.lastUsed)}</div>
+										</div>
+									</div>
+								</button>
+
+								{#if expandedSession === session.name}
+									<div class="border-t border-zinc-800 p-3 bg-zinc-950 space-y-3">
+										{#if sessionPanes[session.name]?.length > 0}
+											{#each sessionPanes[session.name] as pane}
+												<div class="rounded-md border border-zinc-800 overflow-hidden">
+													<div class="px-3 py-1.5 text-[11px] bg-zinc-900 border-b border-zinc-800 text-zinc-400 flex items-center justify-between">
+														<span>Pane {pane.id}</span>
+														<span>{pane.currentCommand}</span>
+													</div>
+													<TerminalPane paneId={pane.id} width={pane.width} height={pane.height} />
+												</div>
+											{/each}
+										{:else}
+											<div class="text-xs text-zinc-500">No panes found.</div>
 										{/if}
 									</div>
-									<div class="text-right flex-shrink-0">
-										<div class="text-[11px] text-amber-400">idle</div>
-										<div class="text-[11px] text-zinc-500">{formatRelativeTime(session.lastUsed)}</div>
-									</div>
-								</div>
+								{/if}
 							</div>
 						{/each}
 					</div>

@@ -8,11 +8,41 @@ import * as tauri from '$lib/stores/tauri';
 
 // ── Project State ──────────────────────────────────────────────────────────
 
+const HIDDEN_PROJECTS_STORAGE_KEY = 'deck.hiddenProjects';
+
 let projects = $state<Project[]>([]);
 let selectedProjectId = $state<string | null>(null);
 let projectTrees = $state<Record<string, DirEntry[]>>({});
 let loading = $state(false);
 let reposRoot = $state('~/repos');
+let hiddenProjectIds = $state<string[]>([]);
+let hiddenProjectsInitialized = false;
+
+function initializeHiddenProjects() {
+	if (hiddenProjectsInitialized) return;
+	hiddenProjectsInitialized = true;
+	if (typeof window === 'undefined') return;
+	const raw = localStorage.getItem(HIDDEN_PROJECTS_STORAGE_KEY);
+	if (!raw) return;
+
+	try {
+		const parsed = JSON.parse(raw);
+		if (Array.isArray(parsed)) {
+			hiddenProjectIds = parsed.filter((value): value is string => typeof value === 'string');
+		}
+	} catch {
+		hiddenProjectIds = [];
+	}
+}
+
+function persistHiddenProjects() {
+	if (typeof window === 'undefined') return;
+	localStorage.setItem(HIDDEN_PROJECTS_STORAGE_KEY, JSON.stringify(hiddenProjectIds));
+}
+
+function isProjectVisible(projectId: string): boolean {
+	return !hiddenProjectIds.includes(projectId);
+}
 
 // ── File Trees ─────────────────────────────────────────────────────────────
 
@@ -265,9 +295,16 @@ let conversations = $state<Conversation[]>(mockConversations);
 async function init() {
 	loading = true;
 	try {
+		initializeHiddenProjects();
 		reposRoot = tauri.getReposRoot();
 		const loaded = await tauri.loadConfig();
 		projects = loaded;
+		const loadedProjectIds = new Set(loaded.map((project) => project.id));
+		const nextHiddenProjectIds = hiddenProjectIds.filter((projectId) => loadedProjectIds.has(projectId));
+		if (nextHiddenProjectIds.length !== hiddenProjectIds.length) {
+			hiddenProjectIds = nextHiddenProjectIds;
+			persistHiddenProjects();
+		}
 
 		const nextTrees: Record<string, DirEntry[]> = {};
 		for (const project of loaded) {
@@ -284,9 +321,15 @@ async function init() {
 			return;
 		}
 
-		const stillExists = loaded.some((project) => project.id === selectedProjectId);
-		if (!selectedProjectId || !stillExists) {
-			selectedProjectId = loaded[0].id;
+		const visibleProjects = loaded.filter((project) => isProjectVisible(project.id));
+		if (visibleProjects.length === 0) {
+			selectedProjectId = null;
+			return;
+		}
+
+		const stillExistsAndVisible = visibleProjects.some((project) => project.id === selectedProjectId);
+		if (!selectedProjectId || !stillExistsAndVisible) {
+			selectedProjectId = visibleProjects[0].id;
 		}
 
 		if (selectedProjectId) {
@@ -327,9 +370,12 @@ async function addProject(path: string, name?: string, icon?: string): Promise<P
 async function removeProject(id: string) {
 	projects = projects.filter(p => p.id !== id);
 	delete projectTrees[id];
+	hiddenProjectIds = hiddenProjectIds.filter((projectId) => projectId !== id);
+	persistHiddenProjects();
 
 	if (selectedProjectId === id) {
-		selectedProjectId = projects[0]?.id ?? null;
+		const nextVisible = projects.find((project) => isProjectVisible(project.id));
+		selectedProjectId = nextVisible?.id ?? null;
 	}
 }
 
@@ -347,6 +393,7 @@ async function refreshProjectTree(projectId: string) {
 }
 
 function selectProject(id: string) {
+	if (!isProjectVisible(id)) return;
 	selectedProjectId = id;
 	if (!projectTrees[id]) {
 		refreshProjectTree(id);
@@ -370,10 +417,37 @@ async function refreshProjects() {
 	await init();
 }
 
+function hideProject(projectId: string) {
+	if (hiddenProjectIds.includes(projectId)) return;
+	hiddenProjectIds = [...hiddenProjectIds, projectId];
+	persistHiddenProjects();
+	delete projectTrees[projectId];
+
+	if (selectedProjectId === projectId) {
+		const nextVisible = projects.find((project) => isProjectVisible(project.id));
+		selectedProjectId = nextVisible?.id ?? null;
+		if (selectedProjectId) {
+			refreshProjectTree(selectedProjectId);
+		}
+	}
+}
+
+function unhideProject(projectId: string) {
+	if (!hiddenProjectIds.includes(projectId)) return;
+	hiddenProjectIds = hiddenProjectIds.filter((id) => id !== projectId);
+	persistHiddenProjects();
+
+	if (!selectedProjectId) {
+		selectedProjectId = projectId;
+		refreshProjectTree(projectId);
+	}
+}
+
 // ── Export reactive getters and actions ─────────────────────────────────────
 
 export const projectStore = {
-	get projects() { return projects; },
+	get projects() { return projects.filter((project) => isProjectVisible(project.id)); },
+	get hiddenProjects() { return projects.filter((project) => !isProjectVisible(project.id)); },
 	get selectedProjectId() { return selectedProjectId; },
 	get selectedProject() { return projects.find(p => p.id === selectedProjectId) ?? null; },
 	get loading() { return loading; },
@@ -393,4 +467,6 @@ export const projectStore = {
 	addProjectViaDialog,
 	setReposRoot,
 	refreshProjects,
+	hideProject,
+	unhideProject,
 };

@@ -28,11 +28,8 @@
 		{ name: 'hotfix', desc: 'Fast-track critical fix to prod', icon: '🚨', calls: ['develop', 'deploy-prod'] },
 	];
 
-	const globalSkills: Skill[] = [
-		{ name: 'research', desc: 'Deep investigation on a topic', icon: '🔍', calls: [] },
-		{ name: 'summarize', desc: 'Condense content into key points', icon: '📝', calls: [] },
-		{ name: 'explain', desc: 'Break down complex concepts', icon: '💡', calls: [] },
-	];
+	let globalSkills = $state<Skill[]>([]);
+	let globalSkillsLoading = $state(false);
 
 	// Mock changed files (from main branch)
 	const changedFiles = [
@@ -48,6 +45,46 @@
 	const selectedProject = $derived(projectStore.selectedProject);
 	const fileTree = $derived(selectedProject ? projectStore.getProjectTree(selectedProject.id) : []);
 	const treeItemCount = $derived(fileTree.reduce((acc: number, f) => acc + (f.children?.length ?? (f.is_file ? 1 : 0)), fileTree.length));
+	const totalSkillCount = $derived(repoSkills.length + globalSkills.length);
+
+	function skillHoverKey(scope: 'repo' | 'global', name: string): string {
+		return `${scope}:${name}`;
+	}
+
+	$effect(() => {
+		let cancelled = false;
+		globalSkillsLoading = true;
+
+		void (async () => {
+			try {
+				const response = await fetch('/api/skills/global');
+				if (!response.ok) {
+					if (!cancelled) globalSkills = [];
+					return;
+				}
+
+				const data: { skills?: Array<{ name: string; description: string }> } = await response.json();
+				const nextSkills = Array.isArray(data.skills)
+					? data.skills.map((skill) => ({
+						name: skill.name,
+						desc: skill.description,
+						icon: '🌐',
+						calls: []
+					}))
+					: [];
+
+				if (!cancelled) globalSkills = nextSkills;
+			} catch {
+				if (!cancelled) globalSkills = [];
+			} finally {
+				if (!cancelled) globalSkillsLoading = false;
+			}
+		})();
+
+		return () => {
+			cancelled = true;
+		};
+	});
 </script>
 
 <section class="w-80 flex-shrink-0 border-r border-zinc-800 flex flex-col overflow-hidden bg-zinc-925/50">
@@ -134,18 +171,19 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 				</svg>
 				Skills
-				<span class="ml-auto text-xs text-zinc-500">{repoSkills.length + globalSkills.length}</span>
+				<span class="ml-auto text-xs text-zinc-500">{totalSkillCount}</span>
 			</button>
 			{#if skillsExpanded}
 				<div class="px-2 pb-2" transition:slide={{ duration: 150 }}>
 					<!-- Repo skills -->
 					{#each repoSkills as skill}
+						{@const hoverKey = skillHoverKey('repo', skill.name)}
 						<button
 							class="w-full flex items-center gap-2.5 px-3 py-1 rounded-lg hover:bg-zinc-800 text-left"
 							onclick={() => onSelectSkill?.(skill.name)}
 							onmouseenter={() => {
 								if (hoverTimeout) clearTimeout(hoverTimeout);
-								hoverTimeout = setTimeout(() => { hoveredSkill = skill.name; }, 100);
+								hoverTimeout = setTimeout(() => { hoveredSkill = hoverKey; }, 100);
 							}}
 							onmouseleave={() => {
 								if (hoverTimeout) clearTimeout(hoverTimeout);
@@ -154,8 +192,8 @@
 						>
 							<span class="text-base flex-shrink-0">{skill.icon}</span>
 							<div class="flex-1 min-w-0">
-								<span class="text-sm font-medium text-zinc-300" class:text-white={hoveredSkill === skill.name}>{skill.name}</span>
-								{#if hoveredSkill === skill.name}
+								<span class="text-sm font-medium text-zinc-300" class:text-white={hoveredSkill === hoverKey}>{skill.name}</span>
+								{#if hoveredSkill === hoverKey}
 									<div class="text-xs text-zinc-400" transition:slide={{ duration: 150 }}>{skill.desc}</div>
 								{/if}
 							</div>
@@ -168,28 +206,35 @@
 						<div class="flex-1 h-px bg-zinc-800"></div>
 					</div>
 					<!-- Global skills -->
-					{#each globalSkills as skill}
-						<button
-							class="w-full flex items-center gap-2.5 px-3 py-1 rounded-lg hover:bg-zinc-800 text-left"
-							onclick={() => onSelectSkill?.(skill.name)}
-							onmouseenter={() => {
-								if (hoverTimeout) clearTimeout(hoverTimeout);
-								hoverTimeout = setTimeout(() => { hoveredSkill = skill.name; }, 100);
-							}}
-							onmouseleave={() => {
-								if (hoverTimeout) clearTimeout(hoverTimeout);
-								hoverTimeout = setTimeout(() => { hoveredSkill = null; }, 50);
-							}}
-						>
-							<span class="text-base flex-shrink-0">{skill.icon}</span>
-							<div class="flex-1 min-w-0">
-								<span class="text-sm font-medium text-zinc-300" class:text-white={hoveredSkill === skill.name}>{skill.name}</span>
-								{#if hoveredSkill === skill.name}
-									<div class="text-xs text-zinc-400" transition:slide={{ duration: 150 }}>{skill.desc}</div>
-								{/if}
-							</div>
-						</button>
-					{/each}
+					{#if globalSkillsLoading}
+						<div class="px-3 py-1 text-xs text-zinc-500">Loading global skills...</div>
+					{:else if globalSkills.length === 0}
+						<div class="px-3 py-1 text-xs text-zinc-500">No global skills found</div>
+					{:else}
+						{#each globalSkills as skill}
+							{@const hoverKey = skillHoverKey('global', skill.name)}
+							<button
+								class="w-full flex items-center gap-2.5 px-3 py-1 rounded-lg hover:bg-zinc-800 text-left"
+								onclick={() => onSelectSkill?.(skill.name)}
+								onmouseenter={() => {
+									if (hoverTimeout) clearTimeout(hoverTimeout);
+									hoverTimeout = setTimeout(() => { hoveredSkill = hoverKey; }, 100);
+								}}
+								onmouseleave={() => {
+									if (hoverTimeout) clearTimeout(hoverTimeout);
+									hoverTimeout = setTimeout(() => { hoveredSkill = null; }, 50);
+								}}
+							>
+								<span class="text-base flex-shrink-0">{skill.icon}</span>
+								<div class="flex-1 min-w-0">
+									<span class="text-sm font-medium text-zinc-300" class:text-white={hoveredSkill === hoverKey}>{skill.name}</span>
+									{#if hoveredSkill === hoverKey}
+										<div class="text-xs text-zinc-400" transition:slide={{ duration: 150 }}>{skill.desc}</div>
+									{/if}
+								</div>
+							</button>
+						{/each}
+					{/if}
 				</div>
 			{/if}
 		</div>
