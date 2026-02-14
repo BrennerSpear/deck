@@ -1,232 +1,16 @@
 {
   "edges": [
     {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxNotInstalledError"
-    },
-    {
       "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "getReposRoot",
+      "from_func": "readFile",
       "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "ensureReposRootInitialized"
+      "to_func": "mockReadFile"
     },
     {
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
       "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "inferStatus"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "init",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "isProjectVisible"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "listTmuxPanes",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "toNumber"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "removeProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "persistHiddenProjects"
-    },
-    {
-      "from_file": "src/routes/api/fs/read/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "isPathInside"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "DELETE",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "formatTmuxError"
-    },
-    {
-      "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "listDir",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "getReposRoot"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "hideProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "refreshProjectTree"
-    },
-    {
-      "from_file": "src/routes/api/skills/global/+server.ts",
-      "from_func": "extractDescription",
-      "to_file": "src/routes/api/skills/global/+server.ts",
-      "to_func": "normalizeQuotedValue"
-    },
-    {
-      "from_file": "src/routes/api/openclaw/cron/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/openclaw.ts",
-      "to_func": "openclawFetch"
-    },
-    {
-      "from_file": "src/routes/api/tmux/capture/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "formatTmuxError"
-    },
-    {
-      "from_file": "src/routes/api/fs/list/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "resolveReposRoot"
-    },
-    {
-      "from_file": "src/routes/api/openclaw/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/openclaw.ts",
-      "to_func": "openclawFetch"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "POST",
-      "to_file": "src/routes/api/tmux/sessions/+server.ts",
-      "to_func": "loadTmuxSessionsState"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "listTmuxPanes",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "runTmux"
-    },
-    {
-      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
-      "from_func": "POST",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "formatTmuxError"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxTargetMissingError"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "selectProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "isProjectVisible"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "POST",
-      "to_file": "src/routes/api/tmux/sessions/+server.ts",
-      "to_func": "saveTmuxSessionsState"
-    },
-    {
-      "from_file": "src/routes/api/fs/list/+server.ts",
-      "from_func": "buildTree",
-      "to_file": "src/routes/api/fs/list/+server.ts",
-      "to_func": "buildTree"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "setReposRoot",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "setReposRoot"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "refreshProjectTree",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "listDir"
-    },
-    {
-      "from_file": "src/routes/api/fs/list/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/routes/api/fs/list/+server.ts",
-      "to_func": "buildTree"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "epochToIso"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "DELETE",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "killTmuxSession"
-    },
-    {
-      "from_file": "src/routes/api/tmux/panes/+server.ts",
-      "from_func": "getTmuxPanes",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "listTmuxPanes"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "extractLastLogLine"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "listTmuxSessions",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "parseLines"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "captureTmuxPane",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "runTmux"
-    },
-    {
-      "from_file": "src/routes/api/fs/read/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "resolveReposRoot"
-    },
-    {
-      "from_file": "src/routes/api/skills/global/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/routes/api/skills/global/+server.ts",
-      "to_func": "loadSkillDescription"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/routes/api/tmux/sessions/+server.ts",
-      "to_func": "loadTmuxSessions"
-    },
-    {
-      "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "listDir",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "mockListDir"
-    },
-    {
-      "from_file": "src/lib/stores/files.svelte.ts",
-      "from_func": "openFile",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "readFile"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "DELETE",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxNotInstalledError"
-    },
-    {
-      "from_file": "src/lib/tmux-session-utils.ts",
-      "from_func": "getFolderName",
-      "to_file": "src/lib/tmux-session-utils.ts",
-      "to_func": "normalizePath"
+      "to_func": "isTmuxServerNotRunningError"
     },
     {
       "from_file": "src/routes/api/projects/+server.ts",
@@ -235,82 +19,34 @@
       "to_func": "listProjects"
     },
     {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxServerNotRunningError"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "setReposRoot",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "getReposRoot"
-    },
-    {
       "from_file": "src/lib/stores/tauri.ts",
       "from_func": "setReposRoot",
       "to_file": "src/lib/stores/tauri.ts",
       "to_func": "persistReposRoot"
     },
     {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "inferAgent"
+      "from_file": "src/lib/stores/files.svelte.ts",
+      "from_func": "invalidateCache",
+      "to_file": "src/lib/stores/files.svelte.ts",
+      "to_func": "openFile"
     },
     {
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
       "from_func": "DELETE",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxServerNotRunningError"
-    },
-    {
-      "from_file": "src/routes/api/tmux/capture/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxNotInstalledError"
-    },
-    {
-      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
-      "from_func": "POST",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxNotInstalledError"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "saveTmuxSessionsState",
-      "to_file": "src/routes/api/tmux/sessions/+server.ts",
-      "to_func": "ensureStateDir"
-    },
-    {
-      "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "readFile",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "mockReadFile"
-    },
-    {
-      "from_file": "src/routes/api/tmux/capture/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "captureTmuxPane"
-    },
-    {
-      "from_file": "src/lib/tmux-session-utils.ts",
-      "from_func": "sessionBelongsToProject",
-      "to_file": "src/lib/tmux-session-utils.ts",
-      "to_func": "getFolderName"
-    },
-    {
-      "from_file": "src/routes/api/tmux/panes/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
       "to_func": "formatTmuxError"
     },
     {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "listTmuxPanes",
+      "from_file": "src/routes/api/fs/list/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "isPathInside"
+    },
+    {
+      "from_file": "src/routes/api/tmux/capture/+server.ts",
+      "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "parseLines"
+      "to_func": "formatTmuxError"
     },
     {
       "from_file": "src/routes/api/skills/global/+server.ts",
@@ -320,63 +56,147 @@
     },
     {
       "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "init",
+      "from_func": "hideProject",
       "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "persistHiddenProjects"
+      "to_func": "refreshProjectTree"
     },
     {
       "from_file": "src/lib/server/tmux.ts",
-      "from_func": "captureTmuxPaneTail",
+      "from_func": "listTmuxSessions",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "parseLines"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/routes/api/tmux/sessions/+server.ts",
+      "to_func": "saveTmuxSessionsState"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "formatTmuxError"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "listTmuxSessions",
       "to_file": "src/lib/server/tmux.ts",
       "to_func": "runTmux"
+    },
+    {
+      "from_file": "src/routes/api/fs/list/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "resolveReposRoot"
     },
     {
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
       "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "inferActivityState"
+      "to_func": "listTmuxPanes"
     },
     {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "DELETE",
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "captureTmuxPane",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxTargetMissingError"
+      "to_func": "runTmux"
     },
     {
       "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "hideProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "isProjectVisible"
-    },
-    {
-      "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "readFile",
+      "from_func": "addProjectViaDialog",
       "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "getReposRoot"
+      "to_func": "pickFolder"
     },
     {
       "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "unhideProject",
+      "from_func": "addProjectViaDialog",
       "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "persistHiddenProjects"
+      "to_func": "addProject"
+    },
+    {
+      "from_file": "src/routes/api/tmux/panes/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxServerNotRunningError"
     },
     {
       "from_file": "src/routes/api/tmux/capture/+server.ts",
       "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxTargetMissingError"
+      "to_func": "captureTmuxPane"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "init",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "initializeHiddenProjects"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "init",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "persistHiddenProjects"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxNotInstalledError"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "init",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "isProjectVisible"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "getPaneCursorPosition",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "toNumber"
+    },
+    {
+      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxNotInstalledError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/routes/api/tmux/sessions/+server.ts",
+      "to_func": "loadTmuxSessions"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "setReposRoot",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "init"
     },
     {
       "from_file": "src/lib/tmux-session-utils.ts",
-      "from_func": "sessionBelongsToProject",
+      "from_func": "getFolderName",
       "to_file": "src/lib/tmux-session-utils.ts",
       "to_func": "normalizePath"
     },
     {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "killTmuxSession",
+      "from_file": "src/routes/api/skills/global/+server.ts",
+      "from_func": "extractDescription",
+      "to_file": "src/routes/api/skills/global/+server.ts",
+      "to_func": "normalizeQuotedValue"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "runTmux"
+      "to_func": "isTmuxTargetMissingError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/routes/api/tmux/sessions/+server.ts",
+      "to_func": "loadTmuxSessionsState"
     },
     {
       "from_file": "src/lib/stores/projects.svelte.ts",
@@ -391,16 +211,100 @@
       "to_func": "execFileAsync"
     },
     {
-      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
-      "from_func": "POST",
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "listTmuxSessions",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxTargetMissingError"
+      "to_func": "toNumber"
     },
     {
-      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
-      "from_func": "POST",
-      "to_file": "src/routes/api/tmux/send-keys/+server.ts",
+      "from_file": "src/lib/tmux-session-utils.ts",
+      "from_func": "sessionBelongsToProject",
+      "to_file": "src/lib/tmux-session-utils.ts",
+      "to_func": "getFolderName"
+    },
+    {
+      "from_file": "src/lib/server/projects.ts",
+      "from_func": "listProjects",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "normalizeProjectId"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "hideProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "persistHiddenProjects"
+    },
+    {
+      "from_file": "src/lib/stores/tauri.ts",
+      "from_func": "loadConfig",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "getReposRoot"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "listTmuxPanes",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "parseLines"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "killTmuxSession",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "runTmux"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "loadTmuxSessionsState",
+      "to_file": "src/routes/api/tmux/sessions/+server.ts",
+      "to_func": "ensureStateDir"
+    },
+    {
+      "from_file": "src/routes/api/tmux/panes/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxNotInstalledError"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "hideProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "isProjectVisible"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "runTmux",
+      "to_file": "src/lib/server/tmux.ts",
       "to_func": "execFileAsync"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "listTmuxPanes",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "runTmux"
+    },
+    {
+      "from_file": "src/routes/api/tmux/panes/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/routes/api/tmux/panes/+server.ts",
+      "to_func": "getTmuxPanes"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "formatTmuxError"
+    },
+    {
+      "from_file": "src/routes/api/fs/list/+server.ts",
+      "from_func": "buildTree",
+      "to_file": "src/routes/api/fs/list/+server.ts",
+      "to_func": "buildTree"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "setReposRoot",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "getReposRoot"
     },
     {
       "from_file": "src/lib/server/projects.ts",
@@ -412,133 +316,31 @@
       "from_file": "src/lib/stores/projects.svelte.ts",
       "from_func": "removeProject",
       "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "persistHiddenProjects"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "removeProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
       "to_func": "isProjectVisible"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "init",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "initializeHiddenProjects"
-    },
-    {
-      "from_file": "src/routes/api/tmux/panes/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxNotInstalledError"
-    },
-    {
-      "from_file": "src/lib/stores/files.svelte.ts",
-      "from_func": "invalidateCache",
-      "to_file": "src/lib/stores/files.svelte.ts",
-      "to_func": "openFile"
-    },
-    {
-      "from_file": "src/routes/api/tmux/panes/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/routes/api/tmux/panes/+server.ts",
-      "to_func": "getTmuxPanes"
-    },
-    {
-      "from_file": "src/routes/api/tmux/capture/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxServerNotRunningError"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "POST",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "formatTmuxError"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "init",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "refreshProjectTree"
-    },
-    {
-      "from_file": "src/lib/server/openclaw.ts",
-      "from_func": "openclawFetch",
-      "to_file": "src/lib/server/openclaw.ts",
-      "to_func": "getToken"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "addProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "refreshProjectTree"
-    },
-    {
-      "from_file": "src/lib/server/projects.ts",
-      "from_func": "listProjects",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "resolveReposRoot"
-    },
-    {
-      "from_file": "src/routes/api/tmux/panes/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxServerNotRunningError"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "runTmux",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "execFileAsync"
-    },
-    {
-      "from_file": "src/lib/server/projects.ts",
-      "from_func": "listProjects",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "pickIcon"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "refreshProjects",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "init"
-    },
-    {
-      "from_file": "src/routes/api/tmux/capture/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "getPaneCursorPosition"
-    },
-    {
-      "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "formatTmuxError"
-    },
-    {
-      "from_file": "src/routes/api/tmux/panes/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "isTmuxTargetMissingError"
-    },
-    {
-      "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "loadConfig",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "getReposRoot"
     },
     {
       "from_file": "src/lib/stores/projects.svelte.ts",
       "from_func": "selectProject",
       "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "refreshProjectTree"
+      "to_func": "isProjectVisible"
+    },
+    {
+      "from_file": "src/routes/api/fs/list/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/routes/api/fs/list/+server.ts",
+      "to_func": "buildTree"
     },
     {
       "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "init",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "getReposRoot"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "getPaneCursorPosition",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "toNumber"
+      "from_func": "unhideProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "refreshProjectTree"
     },
     {
       "from_file": "src/lib/stores/tauri.ts",
@@ -550,7 +352,175 @@
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
       "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "listTmuxPanes"
+      "to_func": "inferActivityState"
+    },
+    {
+      "from_file": "src/routes/api/tmux/capture/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "getPaneCursorPosition"
+    },
+    {
+      "from_file": "src/lib/stores/files.svelte.ts",
+      "from_func": "openFile",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "readFile"
+    },
+    {
+      "from_file": "src/routes/api/openclaw/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/openclaw.ts",
+      "to_func": "openclawFetch"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "listTmuxPanes",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "toNumber"
+    },
+    {
+      "from_file": "src/routes/api/openclaw/cron/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/openclaw.ts",
+      "to_func": "openclawFetch"
+    },
+    {
+      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxTargetMissingError"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "refreshProjectTree",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "listDir"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "addProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "refreshProjectTree"
+    },
+    {
+      "from_file": "src/routes/api/tmux/panes/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "formatTmuxError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "DELETE",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxServerNotRunningError"
+    },
+    {
+      "from_file": "src/lib/stores/tauri.ts",
+      "from_func": "loadConfig",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "persistReposRoot"
+    },
+    {
+      "from_file": "src/routes/api/fs/read/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "isPathInside"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxNotInstalledError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/capture/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxServerNotRunningError"
+    },
+    {
+      "from_file": "src/lib/stores/tauri.ts",
+      "from_func": "listDir",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "getReposRoot"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "saveTmuxSessionsState",
+      "to_file": "src/routes/api/tmux/sessions/+server.ts",
+      "to_func": "ensureStateDir"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "init",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "refreshProjectTree"
+    },
+    {
+      "from_file": "src/lib/stores/tauri.ts",
+      "from_func": "readFile",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "getReposRoot"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "refreshProjects",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "init"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "init",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "getReposRoot"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "setReposRoot",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "setReposRoot"
+    },
+    {
+      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "formatTmuxError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/panes/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxTargetMissingError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "epochToIso"
+    },
+    {
+      "from_file": "src/routes/api/skills/global/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/routes/api/skills/global/+server.ts",
+      "to_func": "loadSkillDescription"
+    },
+    {
+      "from_file": "src/routes/api/fs/read/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "resolveReposRoot"
+    },
+    {
+      "from_file": "src/lib/stores/tauri.ts",
+      "from_func": "listDir",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "mockListDir"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "unhideProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "persistHiddenProjects"
     },
     {
       "from_file": "src/lib/stores/tauri.ts",
@@ -560,63 +530,51 @@
     },
     {
       "from_file": "src/lib/server/tmux.ts",
-      "from_func": "listTmuxSessions",
+      "from_func": "getPaneCursorPosition",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "toNumber"
+      "to_func": "runTmux"
     },
     {
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "loadTmuxSessionsState",
-      "to_file": "src/routes/api/tmux/sessions/+server.ts",
-      "to_func": "ensureStateDir"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "addProjectViaDialog",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "pickFolder"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "hideProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "persistHiddenProjects"
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "inferStatus"
     },
     {
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
-      "from_func": "POST",
+      "from_func": "DELETE",
       "to_file": "src/lib/server/tmux.ts",
       "to_func": "isTmuxNotInstalledError"
     },
     {
       "from_file": "src/lib/server/tmux.ts",
-      "from_func": "extractLastLogLine",
-      "to_file": "src/lib/server/tmux.ts",
-      "to_func": "stripAnsi"
-    },
-    {
-      "from_file": "src/lib/server/projects.ts",
-      "from_func": "listProjects",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "normalizeProjectId"
-    },
-    {
-      "from_file": "src/routes/api/fs/list/+server.ts",
-      "from_func": "GET",
-      "to_file": "src/lib/server/projects.ts",
-      "to_func": "isPathInside"
-    },
-    {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "addProjectViaDialog",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "addProject"
-    },
-    {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "getPaneCursorPosition",
+      "from_func": "captureTmuxPaneTail",
       "to_file": "src/lib/server/tmux.ts",
       "to_func": "runTmux"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "listTmuxSessions"
+    },
+    {
+      "from_file": "src/routes/api/tmux/capture/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxNotInstalledError"
+    },
+    {
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "extractLastLogLine"
+    },
+    {
+      "from_file": "src/routes/api/tmux/panes/+server.ts",
+      "from_func": "getTmuxPanes",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "listTmuxPanes"
     },
     {
       "from_file": "src/lib/server/projects.ts",
@@ -628,41 +586,83 @@
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
       "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "listTmuxSessions"
+      "to_func": "captureTmuxPaneTail"
     },
     {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "setReposRoot",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "init"
+      "from_file": "src/lib/server/openclaw.ts",
+      "from_func": "openclawFetch",
+      "to_file": "src/lib/server/openclaw.ts",
+      "to_func": "getToken"
     },
     {
-      "from_file": "src/lib/stores/projects.svelte.ts",
-      "from_func": "unhideProject",
-      "to_file": "src/lib/stores/projects.svelte.ts",
-      "to_func": "refreshProjectTree"
+      "from_file": "src/lib/tmux-session-utils.ts",
+      "from_func": "sessionBelongsToProject",
+      "to_file": "src/lib/tmux-session-utils.ts",
+      "to_func": "normalizePath"
     },
     {
-      "from_file": "src/lib/server/tmux.ts",
-      "from_func": "listTmuxSessions",
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "DELETE",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "runTmux"
+      "to_func": "killTmuxSession"
     },
     {
-      "from_file": "src/lib/stores/tauri.ts",
-      "from_func": "loadConfig",
-      "to_file": "src/lib/stores/tauri.ts",
-      "to_func": "persistReposRoot"
+      "from_file": "src/routes/api/tmux/sessions/+server.ts",
+      "from_func": "DELETE",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxTargetMissingError"
+    },
+    {
+      "from_file": "src/lib/server/projects.ts",
+      "from_func": "listProjects",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "pickIcon"
     },
     {
       "from_file": "src/routes/api/tmux/sessions/+server.ts",
       "from_func": "GET",
       "to_file": "src/lib/server/tmux.ts",
-      "to_func": "captureTmuxPaneTail"
+      "to_func": "inferAgent"
+    },
+    {
+      "from_file": "src/routes/api/tmux/capture/+server.ts",
+      "from_func": "GET",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "isTmuxTargetMissingError"
+    },
+    {
+      "from_file": "src/lib/stores/tauri.ts",
+      "from_func": "getReposRoot",
+      "to_file": "src/lib/stores/tauri.ts",
+      "to_func": "ensureReposRootInitialized"
+    },
+    {
+      "from_file": "src/lib/server/projects.ts",
+      "from_func": "listProjects",
+      "to_file": "src/lib/server/projects.ts",
+      "to_func": "resolveReposRoot"
+    },
+    {
+      "from_file": "src/lib/stores/projects.svelte.ts",
+      "from_func": "selectProject",
+      "to_file": "src/lib/stores/projects.svelte.ts",
+      "to_func": "refreshProjectTree"
+    },
+    {
+      "from_file": "src/routes/api/tmux/send-keys/+server.ts",
+      "from_func": "POST",
+      "to_file": "src/routes/api/tmux/send-keys/+server.ts",
+      "to_func": "execFileAsync"
+    },
+    {
+      "from_file": "src/lib/server/tmux.ts",
+      "from_func": "extractLastLogLine",
+      "to_file": "src/lib/server/tmux.ts",
+      "to_func": "stripAnsi"
     }
   ],
   "languages": [
     "typescript"
   ],
-  "timestamp": 1771042891.543471
+  "timestamp": 1771043354.608912
 }
