@@ -1,7 +1,18 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { CronJob } from '$lib/types';
 	import DashboardCard from './DashboardCard.svelte';
+
+	interface CronJob {
+		id: string;
+		name: string;
+		enabled: boolean;
+		schedule: string;
+		lastRun?: string;
+		lastStatus?: 'ok' | 'error' | 'skip' | null;
+		consecutiveErrors: number;
+		lastError?: string | null;
+		model?: string | null;
+	}
 
 	let { class: className = '' }: { class?: string } = $props();
 
@@ -22,11 +33,17 @@
 		});
 	});
 
-	const subtitle = $derived.by(() => {
+	const stats = $derived.by(() => {
 		const errorCount = jobs.filter((j) => j.lastStatus === 'error').length;
-		if (errorCount > 0) return `${errorCount} error${errorCount > 1 ? 's' : ''}`;
-		if (jobs.length === 0) return '';
-		return `${jobs.length} jobs`;
+		const okCount = jobs.filter((j) => j.lastStatus === 'ok').length;
+		const total = jobs.length;
+		return { errorCount, okCount, total };
+	});
+
+	const subtitle = $derived.by(() => {
+		if (stats.errorCount > 0) return `${stats.errorCount} error${stats.errorCount > 1 ? 's' : ''} · ${stats.total} jobs`;
+		if (stats.total === 0) return '';
+		return `${stats.okCount} healthy · ${stats.total} jobs`;
 	});
 
 	async function fetchJobs() {
@@ -50,25 +67,32 @@
 		if (!job.enabled) return 'bg-zinc-600';
 		switch (job.lastStatus) {
 			case 'ok':
-				return 'bg-green-500';
+				return 'bg-emerald-500';
 			case 'error':
 				return 'bg-red-500';
 			case 'skip':
-				return 'bg-yellow-500';
+				return 'bg-amber-500';
 			default:
 				return 'bg-zinc-500';
 		}
 	}
 
+	function statusGlow(job: CronJob): string {
+		if (!job.enabled) return '';
+		if (job.lastStatus === 'error') return 'shadow-[0_0_6px_rgba(239,68,68,0.5)]';
+		if (job.lastStatus === 'ok') return 'shadow-[0_0_6px_rgba(16,185,129,0.4)]';
+		return '';
+	}
+
 	function formatTime(ts?: string): string {
-		if (!ts) return 'never';
+		if (!ts) return '—';
 		const d = new Date(ts);
 		const now = Date.now();
 		const diffMs = now - d.getTime();
 		if (diffMs < 60_000) return 'just now';
 		if (diffMs < 3_600_000) return `${Math.floor(diffMs / 60_000)}m ago`;
 		if (diffMs < 86_400_000) return `${Math.floor(diffMs / 3_600_000)}h ago`;
-		return d.toLocaleDateString();
+		return `${Math.floor(diffMs / 86_400_000)}d ago`;
 	}
 
 	onMount(() => {
@@ -87,16 +111,28 @@
 	{:else if sorted.length === 0}
 		<div class="text-sm text-zinc-500">No cron jobs configured</div>
 	{:else}
-		<div class="space-y-1.5">
+		<div class="space-y-0.5">
 			{#each sorted as job}
-				<div class="flex items-center gap-3 px-2 py-1.5 rounded hover:bg-zinc-800/40 transition-colors">
-					<div class="h-2 w-2 rounded-full flex-shrink-0 {statusColor(job)}"></div>
-					<span class="text-sm flex-1 truncate" class:text-zinc-500={!job.enabled}>{job.name}</span>
-					<span class="text-[11px] text-zinc-500 font-mono">{job.schedule}</span>
-					<span class="text-[11px] text-zinc-500 w-16 text-right">{formatTime(job.lastRun)}</span>
-					{#if job.consecutiveErrors > 0}
-						<span class="text-[11px] text-red-400 font-medium">{job.consecutiveErrors}x</span>
-					{/if}
+				<div
+					class="group flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-800/50 transition-colors"
+					title={job.lastError ?? ''}
+				>
+					<div class="h-2.5 w-2.5 rounded-full flex-shrink-0 {statusColor(job)} {statusGlow(job)}"></div>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-center gap-2">
+							<span class="text-sm font-medium truncate" class:text-zinc-500={!job.enabled}>{job.name}</span>
+							{#if job.consecutiveErrors > 0}
+								<span class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-medium">{job.consecutiveErrors}× fail</span>
+							{/if}
+						</div>
+						{#if job.lastError && job.lastStatus === 'error'}
+							<div class="text-[11px] text-red-400/70 truncate mt-0.5">{job.lastError}</div>
+						{/if}
+					</div>
+					<div class="flex items-center gap-4 flex-shrink-0">
+						<span class="text-[11px] text-zinc-500">{job.schedule}</span>
+						<span class="text-[11px] text-zinc-600 w-14 text-right">{formatTime(job.lastRun)}</span>
+					</div>
 				</div>
 			{/each}
 		</div>
