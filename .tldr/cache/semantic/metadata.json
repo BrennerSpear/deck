@@ -49,8 +49,8 @@
       "signature": "def sessionBelongsToProject(...)",
       "docstring": "",
       "calls": [
-        "getFolderName",
-        "normalizePath"
+        "normalizePath",
+        "getFolderName"
       ],
       "called_by": [],
       "cfg_summary": "complexity:3, blocks:8",
@@ -72,6 +72,26 @@
       "cfg_summary": "complexity:2, blocks:5",
       "dfg_summary": "vars:4, def-use chains:3",
       "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "getTmuxPanes",
+      "qualified_name": "src.routes.api.tmux.panes.+server.ts.getTmuxPanes",
+      "file": "src/routes/api/tmux/panes/+server.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def getTmuxPanes(...)",
+      "docstring": "",
+      "calls": [
+        "listTmuxPanes"
+      ],
+      "called_by": [
+        "GET"
+      ],
+      "cfg_summary": "complexity:2, blocks:5",
+      "dfg_summary": "vars:12, def-use chains:4",
+      "dependencies": "@sveltejs/kit, ./$types, $lib/types, $lib/server/tmux",
       "code_preview": ""
     },
     {
@@ -321,6 +341,80 @@
       "code_preview": ""
     },
     {
+      "name": "parseEventLog",
+      "qualified_name": "src.routes.api.tmux.events.+server.ts.parseEventLog",
+      "file": "src/routes/api/tmux/events/+server.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def parseEventLog(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "complexity:2, blocks:5",
+      "dfg_summary": "vars:9, def-use chains:3",
+      "dependencies": "@sveltejs/kit, ./$types, fs/promises, fs, $lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "normalizeQuotedValue",
+      "qualified_name": "src.routes.api.skills.global.+server.ts.normalizeQuotedValue",
+      "file": "src/routes/api/skills/global/+server.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def normalizeQuotedValue(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "extractDescription"
+      ],
+      "cfg_summary": "complexity:2, blocks:5",
+      "dfg_summary": "vars:7, def-use chains:7",
+      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
+      "code_preview": ""
+    },
+    {
+      "name": "extractDescription",
+      "qualified_name": "src.routes.api.skills.global.+server.ts.extractDescription",
+      "file": "src/routes/api/skills/global/+server.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def extractDescription(...)",
+      "docstring": "",
+      "calls": [
+        "normalizeQuotedValue"
+      ],
+      "called_by": [
+        "loadSkillDescription"
+      ],
+      "cfg_summary": "complexity:6, blocks:17",
+      "dfg_summary": "vars:14, def-use chains:11",
+      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
+      "code_preview": ""
+    },
+    {
+      "name": "loadSkillDescription",
+      "qualified_name": "src.routes.api.skills.global.+server.ts.loadSkillDescription",
+      "file": "src/routes/api/skills/global/+server.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def loadSkillDescription(...)",
+      "docstring": "",
+      "calls": [
+        "extractDescription"
+      ],
+      "called_by": [
+        "GET"
+      ],
+      "cfg_summary": "complexity:1, blocks:3",
+      "dfg_summary": "vars:5, def-use chains:2",
+      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
+      "code_preview": ""
+    },
+    {
       "name": "expandHome",
       "qualified_name": "src.lib.server.projects.ts.expandHome",
       "file": "src/lib/server/projects.ts",
@@ -444,9 +538,9 @@
       "docstring": "",
       "calls": [
         "pickIcon",
-        "deriveProjectName",
+        "resolveReposRoot",
         "normalizeProjectId",
-        "resolveReposRoot"
+        "deriveProjectName"
       ],
       "called_by": [
         "GET"
@@ -454,80 +548,6 @@
       "cfg_summary": "complexity:6, blocks:17",
       "dfg_summary": "vars:27, def-use chains:15",
       "dependencies": "node:path, node:fs, node:fs/promises, $lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "parseEventLog",
-      "qualified_name": "src.routes.api.tmux.events.+server.ts.parseEventLog",
-      "file": "src/routes/api/tmux/events/+server.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def parseEventLog(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "complexity:2, blocks:5",
-      "dfg_summary": "vars:9, def-use chains:3",
-      "dependencies": "@sveltejs/kit, ./$types, fs/promises, fs, $lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "normalizeQuotedValue",
-      "qualified_name": "src.routes.api.skills.global.+server.ts.normalizeQuotedValue",
-      "file": "src/routes/api/skills/global/+server.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def normalizeQuotedValue(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "extractDescription"
-      ],
-      "cfg_summary": "complexity:2, blocks:5",
-      "dfg_summary": "vars:7, def-use chains:7",
-      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
-      "code_preview": ""
-    },
-    {
-      "name": "extractDescription",
-      "qualified_name": "src.routes.api.skills.global.+server.ts.extractDescription",
-      "file": "src/routes/api/skills/global/+server.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def extractDescription(...)",
-      "docstring": "",
-      "calls": [
-        "normalizeQuotedValue"
-      ],
-      "called_by": [
-        "loadSkillDescription"
-      ],
-      "cfg_summary": "complexity:6, blocks:17",
-      "dfg_summary": "vars:14, def-use chains:11",
-      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
-      "code_preview": ""
-    },
-    {
-      "name": "loadSkillDescription",
-      "qualified_name": "src.routes.api.skills.global.+server.ts.loadSkillDescription",
-      "file": "src/routes/api/skills/global/+server.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def loadSkillDescription(...)",
-      "docstring": "",
-      "calls": [
-        "extractDescription"
-      ],
-      "called_by": [
-        "GET"
-      ],
-      "cfg_summary": "complexity:1, blocks:3",
-      "dfg_summary": "vars:5, def-use chains:2",
-      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
       "code_preview": ""
     },
     {
@@ -549,26 +569,6 @@
       "cfg_summary": "complexity:5, blocks:15",
       "dfg_summary": "vars:29, def-use chains:28",
       "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
-      "code_preview": ""
-    },
-    {
-      "name": "getTmuxPanes",
-      "qualified_name": "src.routes.api.tmux.panes.+server.ts.getTmuxPanes",
-      "file": "src/routes/api/tmux/panes/+server.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def getTmuxPanes(...)",
-      "docstring": "",
-      "calls": [
-        "listTmuxPanes"
-      ],
-      "called_by": [
-        "GET"
-      ],
-      "cfg_summary": "complexity:2, blocks:5",
-      "dfg_summary": "vars:12, def-use chains:4",
-      "dependencies": "@sveltejs/kit, ./$types, $lib/types, $lib/server/tmux",
       "code_preview": ""
     },
     {
@@ -659,8 +659,8 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "setReposRoot",
-        "getReposRoot"
+        "getReposRoot",
+        "setReposRoot"
       ],
       "cfg_summary": "complexity:4, blocks:9",
       "dfg_summary": "vars:9, def-use chains:3",
@@ -678,8 +678,8 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "setReposRoot",
-        "loadConfig"
+        "loadConfig",
+        "setReposRoot"
       ],
       "cfg_summary": "complexity:2, blocks:4",
       "dfg_summary": "vars:6, def-use chains:0",
@@ -715,11 +715,11 @@
         "ensureReposRootInitialized"
       ],
       "called_by": [
+        "init",
         "setReposRoot",
-        "readFile",
         "listDir",
-        "loadConfig",
-        "init"
+        "readFile",
+        "loadConfig"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:3, def-use chains:0",
@@ -737,9 +737,9 @@
       "docstring": "",
       "calls": [
         "getReposRoot",
-        "ensureReposRootInitialized",
         "persistReposRoot",
         "setReposRoot",
+        "ensureReposRootInitialized",
         "init"
       ],
       "called_by": [
@@ -781,8 +781,8 @@
       "signature": "def readFile(...)",
       "docstring": "",
       "calls": [
-        "getReposRoot",
-        "mockReadFile"
+        "mockReadFile",
+        "getReposRoot"
       ],
       "called_by": [
         "openFile"
@@ -803,8 +803,8 @@
       "docstring": "",
       "calls": [
         "persistReposRoot",
-        "getReposRoot",
-        "mockLoadConfig"
+        "mockLoadConfig",
+        "getReposRoot"
       ],
       "called_by": [
         "init"
@@ -963,11 +963,11 @@
         "execFileAsync"
       ],
       "called_by": [
-        "captureTmuxPaneTail",
+        "listTmuxPanes",
         "listTmuxSessions",
-        "killTmuxSession",
         "captureTmuxPane",
-        "listTmuxPanes"
+        "killTmuxSession",
+        "captureTmuxPaneTail"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:5, def-use chains:1",
@@ -985,8 +985,8 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "listTmuxPanes",
         "listTmuxSessions",
+        "listTmuxPanes",
         "getPaneCursorPosition"
       ],
       "cfg_summary": "complexity:1, blocks:2",
@@ -1024,10 +1024,10 @@
       "docstring": "",
       "calls": [],
       "called_by": [
+        "DELETE",
+        "POST",
         "GET",
         "POST",
-        "POST",
-        "DELETE",
         "GET"
       ],
       "cfg_summary": "complexity:1, blocks:2",
@@ -1046,9 +1046,9 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "GET",
-        "GET",
         "DELETE",
+        "GET",
+        "GET",
         "GET"
       ],
       "cfg_summary": "complexity:1, blocks:2",
@@ -1067,9 +1067,9 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "GET",
-        "POST",
         "DELETE",
+        "POST",
+        "GET",
         "GET",
         "GET"
       ],
@@ -1089,11 +1089,11 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "GET",
+        "DELETE",
+        "POST",
         "GET",
         "POST",
-        "POST",
-        "DELETE"
+        "GET"
       ],
       "cfg_summary": "complexity:2, blocks:5",
       "dfg_summary": "vars:4, def-use chains:2",
@@ -1110,8 +1110,8 @@
       "signature": "def listTmuxSessions(...)",
       "docstring": "",
       "calls": [
-        "runTmux",
         "parseLines",
+        "runTmux",
         "toNumber"
       ],
       "called_by": [
@@ -1132,9 +1132,9 @@
       "signature": "def listTmuxPanes(...)",
       "docstring": "",
       "calls": [
-        "toNumber",
+        "parseLines",
         "runTmux",
-        "parseLines"
+        "toNumber"
       ],
       "called_by": [
         "getTmuxPanes",
@@ -1365,10 +1365,10 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "hideProject",
-        "unhideProject",
         "removeProject",
-        "init"
+        "init",
+        "hideProject",
+        "unhideProject"
       ],
       "cfg_summary": "complexity:2, blocks:4",
       "dfg_summary": "vars:8, def-use chains:0",
@@ -1386,10 +1386,10 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "init",
-        "hideProject",
         "selectProject",
-        "removeProject"
+        "removeProject",
+        "hideProject",
+        "init"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:4, def-use chains:1",
@@ -1422,15 +1422,15 @@
       "signature": "def init(...)",
       "docstring": "",
       "calls": [
-        "initializeHiddenProjects",
-        "isProjectVisible",
+        "getReposRoot",
         "loadConfig",
         "persistHiddenProjects",
-        "getReposRoot"
+        "refreshProjectTree",
+        "initializeHiddenProjects"
       ],
       "called_by": [
-        "refreshProjects",
-        "setReposRoot"
+        "setReposRoot",
+        "refreshProjects"
       ],
       "cfg_summary": "complexity:8, blocks:18",
       "dfg_summary": "vars:33, def-use chains:23",
@@ -1489,11 +1489,11 @@
         "listDir"
       ],
       "called_by": [
-        "addProject",
         "hideProject",
-        "selectProject",
         "unhideProject",
-        "init"
+        "addProject",
+        "init",
+        "selectProject"
       ],
       "cfg_summary": "complexity:2, blocks:4",
       "dfg_summary": "vars:16, def-use chains:8",
@@ -1510,8 +1510,8 @@
       "signature": "def selectProject(...)",
       "docstring": "",
       "calls": [
-        "refreshProjectTree",
-        "isProjectVisible"
+        "isProjectVisible",
+        "refreshProjectTree"
       ],
       "called_by": [],
       "cfg_summary": "complexity:3, blocks:6",
@@ -1549,9 +1549,9 @@
       "docstring": "",
       "calls": [
         "getReposRoot",
-        "ensureReposRootInitialized",
         "persistReposRoot",
         "setReposRoot",
+        "ensureReposRootInitialized",
         "init"
       ],
       "called_by": [
@@ -1590,9 +1590,9 @@
       "signature": "def hideProject(...)",
       "docstring": "",
       "calls": [
-        "persistHiddenProjects",
         "refreshProjectTree",
-        "isProjectVisible"
+        "isProjectVisible",
+        "persistHiddenProjects"
       ],
       "called_by": [],
       "cfg_summary": "complexity:4, blocks:8",
@@ -1610,8 +1610,8 @@
       "signature": "def unhideProject(...)",
       "docstring": "",
       "calls": [
-        "persistHiddenProjects",
-        "refreshProjectTree"
+        "refreshProjectTree",
+        "persistHiddenProjects"
       ],
       "called_by": [],
       "cfg_summary": "complexity:3, blocks:6",
