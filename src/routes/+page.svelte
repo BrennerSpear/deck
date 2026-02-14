@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '../app.css';
 	import { onMount } from 'svelte';
 	import { projectStore } from '$lib/stores/projects.svelte';
 	import { fileStore } from '$lib/stores/files.svelte';
@@ -63,7 +62,7 @@
 	}
 </script>
 
-<div class="h-screen flex bg-zinc-950 text-zinc-100 overflow-hidden">
+<div class="h-full flex overflow-hidden">
 	<!-- Left Sidebar - Projects -->
 	<ProjectSidebar bind:sidebarCollapsed />
 

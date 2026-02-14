@@ -49,8 +49,8 @@
       "signature": "def sessionBelongsToProject(...)",
       "docstring": "",
       "calls": [
-        "normalizePath",
-        "getFolderName"
+        "getFolderName",
+        "normalizePath"
       ],
       "called_by": [],
       "cfg_summary": "complexity:3, blocks:8",
@@ -321,6 +321,45 @@
       "code_preview": ""
     },
     {
+      "name": "getToken",
+      "qualified_name": "src.lib.server.openclaw.ts.getToken",
+      "file": "src/lib/server/openclaw.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def getToken(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "openclawFetch"
+      ],
+      "cfg_summary": "complexity:4, blocks:10",
+      "dfg_summary": "vars:16, def-use chains:7",
+      "dependencies": "node:fs/promises, node:os, node:path, $env/dynamic/private",
+      "code_preview": ""
+    },
+    {
+      "name": "openclawFetch",
+      "qualified_name": "src.lib.server.openclaw.ts.openclawFetch",
+      "file": "src/lib/server/openclaw.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def openclawFetch(...)",
+      "docstring": "",
+      "calls": [
+        "getToken"
+      ],
+      "called_by": [
+        "GET",
+        "GET"
+      ],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:9, def-use chains:5",
+      "dependencies": "node:fs/promises, node:os, node:path, $env/dynamic/private",
+      "code_preview": ""
+    },
+    {
       "name": "expandHome",
       "qualified_name": "src.lib.server.projects.ts.expandHome",
       "file": "src/lib/server/projects.ts",
@@ -387,8 +426,8 @@
         "expandHome"
       ],
       "called_by": [
-        "listProjects",
         "GET",
+        "listProjects",
         "GET"
       ],
       "cfg_summary": "complexity:1, blocks:2",
@@ -443,10 +482,10 @@
       "signature": "def listProjects(...)",
       "docstring": "",
       "calls": [
-        "deriveProjectName",
+        "pickIcon",
         "resolveReposRoot",
         "normalizeProjectId",
-        "pickIcon"
+        "deriveProjectName"
       ],
       "called_by": [
         "GET"
@@ -454,6 +493,26 @@
       "cfg_summary": "complexity:6, blocks:17",
       "dfg_summary": "vars:27, def-use chains:15",
       "dependencies": "node:path, node:fs, node:fs/promises, $lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "getTmuxPanes",
+      "qualified_name": "src.routes.api.tmux.panes.+server.ts.getTmuxPanes",
+      "file": "src/routes/api/tmux/panes/+server.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def getTmuxPanes(...)",
+      "docstring": "",
+      "calls": [
+        "listTmuxPanes"
+      ],
+      "called_by": [
+        "GET"
+      ],
+      "cfg_summary": "complexity:2, blocks:5",
+      "dfg_summary": "vars:12, def-use chains:4",
+      "dependencies": "@sveltejs/kit, ./$types, $lib/types, $lib/server/tmux",
       "code_preview": ""
     },
     {
@@ -470,27 +529,6 @@
       "cfg_summary": "complexity:2, blocks:5",
       "dfg_summary": "vars:9, def-use chains:3",
       "dependencies": "@sveltejs/kit, ./$types, fs/promises, fs, $lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "buildTree",
-      "qualified_name": "src.routes.api.fs.list.+server.ts.buildTree",
-      "file": "src/routes/api/fs/list/+server.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def buildTree(...)",
-      "docstring": "",
-      "calls": [
-        "buildTree"
-      ],
-      "called_by": [
-        "GET",
-        "buildTree"
-      ],
-      "cfg_summary": "complexity:5, blocks:15",
-      "dfg_summary": "vars:29, def-use chains:28",
-      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
       "code_preview": ""
     },
     {
@@ -629,325 +667,24 @@
       "code_preview": ""
     },
     {
-      "name": "getTmuxPanes",
-      "qualified_name": "src.routes.api.tmux.panes.+server.ts.getTmuxPanes",
-      "file": "src/routes/api/tmux/panes/+server.ts",
+      "name": "buildTree",
+      "qualified_name": "src.routes.api.fs.list.+server.ts.buildTree",
+      "file": "src/routes/api/fs/list/+server.ts",
       "line": 1,
       "language": "typescript",
       "unit_type": "function",
-      "signature": "def getTmuxPanes(...)",
+      "signature": "def buildTree(...)",
       "docstring": "",
       "calls": [
-        "listTmuxPanes"
+        "buildTree"
       ],
       "called_by": [
-        "GET"
+        "GET",
+        "buildTree"
       ],
-      "cfg_summary": "complexity:2, blocks:5",
-      "dfg_summary": "vars:12, def-use chains:4",
-      "dependencies": "@sveltejs/kit, ./$types, $lib/types, $lib/server/tmux",
-      "code_preview": ""
-    },
-    {
-      "name": "ensureReposRootInitialized",
-      "qualified_name": "src.lib.stores.tauri.ts.ensureReposRootInitialized",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def ensureReposRootInitialized(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "setReposRoot",
-        "getReposRoot"
-      ],
-      "cfg_summary": "complexity:4, blocks:9",
-      "dfg_summary": "vars:9, def-use chains:3",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "persistReposRoot",
-      "qualified_name": "src.lib.stores.tauri.ts.persistReposRoot",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def persistReposRoot(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "setReposRoot",
-        "loadConfig"
-      ],
-      "cfg_summary": "complexity:2, blocks:4",
-      "dfg_summary": "vars:6, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "isTauri",
-      "qualified_name": "src.lib.stores.tauri.ts.isTauri",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def isTauri(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:1, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "getReposRoot",
-      "qualified_name": "src.lib.stores.tauri.ts.getReposRoot",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def getReposRoot(...)",
-      "docstring": "",
-      "calls": [
-        "ensureReposRootInitialized"
-      ],
-      "called_by": [
-        "readFile",
-        "loadConfig",
-        "init",
-        "listDir",
-        "setReposRoot"
-      ],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:3, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "setReposRoot",
-      "qualified_name": "src.lib.stores.tauri.ts.setReposRoot",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def setReposRoot(...)",
-      "docstring": "",
-      "calls": [
-        "setReposRoot",
-        "persistReposRoot",
-        "ensureReposRootInitialized",
-        "init",
-        "getReposRoot"
-      ],
-      "called_by": [
-        "setReposRoot"
-      ],
-      "cfg_summary": "complexity:1, blocks:1",
-      "dfg_summary": "vars:8, def-use chains:2",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "listDir",
-      "qualified_name": "src.lib.stores.tauri.ts.listDir",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def listDir(...)",
-      "docstring": "",
-      "calls": [
-        "mockListDir",
-        "getReposRoot"
-      ],
-      "called_by": [
-        "refreshProjectTree"
-      ],
-      "cfg_summary": "complexity:2, blocks:5",
-      "dfg_summary": "vars:16, def-use chains:9",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "readFile",
-      "qualified_name": "src.lib.stores.tauri.ts.readFile",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def readFile(...)",
-      "docstring": "",
-      "calls": [
-        "getReposRoot",
-        "mockReadFile"
-      ],
-      "called_by": [
-        "openFile"
-      ],
-      "cfg_summary": "complexity:2, blocks:5",
-      "dfg_summary": "vars:14, def-use chains:7",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "loadConfig",
-      "qualified_name": "src.lib.stores.tauri.ts.loadConfig",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def loadConfig(...)",
-      "docstring": "",
-      "calls": [
-        "getReposRoot",
-        "mockLoadConfig",
-        "persistReposRoot"
-      ],
-      "called_by": [
-        "init"
-      ],
-      "cfg_summary": "complexity:3, blocks:7",
-      "dfg_summary": "vars:16, def-use chains:11",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "saveConfig",
-      "qualified_name": "src.lib.stores.tauri.ts.saveConfig",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def saveConfig(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:2, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "watchDir",
-      "qualified_name": "src.lib.stores.tauri.ts.watchDir",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def watchDir(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:3, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "unwatchDir",
-      "qualified_name": "src.lib.stores.tauri.ts.unwatchDir",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def unwatchDir(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:2, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "pickFolder",
-      "qualified_name": "src.lib.stores.tauri.ts.pickFolder",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def pickFolder(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "addProjectViaDialog"
-      ],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:3, def-use chains:1",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "listenFsChange",
-      "qualified_name": "src.lib.stores.tauri.ts.listenFsChange",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def listenFsChange(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:3, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "mockLoadConfig",
-      "qualified_name": "src.lib.stores.tauri.ts.mockLoadConfig",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def mockLoadConfig(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "loadConfig"
-      ],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:2, def-use chains:0",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "mockListDir",
-      "qualified_name": "src.lib.stores.tauri.ts.mockListDir",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def mockListDir(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "listDir"
-      ],
-      "cfg_summary": "complexity:1, blocks:2",
-      "dfg_summary": "vars:8, def-use chains:33",
-      "dependencies": "$lib/types",
-      "code_preview": ""
-    },
-    {
-      "name": "mockReadFile",
-      "qualified_name": "src.lib.stores.tauri.ts.mockReadFile",
-      "file": "src/lib/stores/tauri.ts",
-      "line": 1,
-      "language": "typescript",
-      "unit_type": "function",
-      "signature": "def mockReadFile(...)",
-      "docstring": "",
-      "calls": [],
-      "called_by": [
-        "readFile"
-      ],
-      "cfg_summary": "complexity:4, blocks:11",
-      "dfg_summary": "vars:7, def-use chains:10",
-      "dependencies": "$lib/types",
+      "cfg_summary": "complexity:5, blocks:15",
+      "dfg_summary": "vars:29, def-use chains:28",
+      "dependencies": "@sveltejs/kit, ./$types, node:path, node:fs, node:fs/promises",
       "code_preview": ""
     },
     {
@@ -964,10 +701,10 @@
       ],
       "called_by": [
         "killTmuxSession",
-        "getPaneCursorPosition",
-        "captureTmuxPaneTail",
         "listTmuxPanes",
-        "captureTmuxPane"
+        "listTmuxSessions",
+        "captureTmuxPane",
+        "getPaneCursorPosition"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:5, def-use chains:1",
@@ -985,9 +722,9 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "getPaneCursorPosition",
         "listTmuxPanes",
-        "listTmuxSessions"
+        "listTmuxSessions",
+        "getPaneCursorPosition"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:6, def-use chains:3",
@@ -1024,11 +761,11 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "GET",
-        "GET",
-        "DELETE",
         "POST",
-        "POST"
+        "GET",
+        "POST",
+        "DELETE",
+        "GET"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:7, def-use chains:4",
@@ -1048,8 +785,8 @@
       "called_by": [
         "GET",
         "GET",
-        "GET",
-        "DELETE"
+        "DELETE",
+        "GET"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:7, def-use chains:7",
@@ -1067,11 +804,11 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "DELETE",
+        "GET",
+        "GET",
+        "GET",
         "POST",
-        "GET",
-        "GET",
-        "GET"
+        "DELETE"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:6, def-use chains:4",
@@ -1089,11 +826,11 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "POST",
+        "GET",
         "POST",
         "GET",
-        "GET",
-        "GET"
+        "DELETE",
+        "POST"
       ],
       "cfg_summary": "complexity:2, blocks:5",
       "dfg_summary": "vars:4, def-use chains:2",
@@ -1137,8 +874,8 @@
         "parseLines"
       ],
       "called_by": [
-        "getTmuxPanes",
-        "GET"
+        "GET",
+        "getTmuxPanes"
       ],
       "cfg_summary": "complexity:4, blocks:11",
       "dfg_summary": "vars:23, def-use chains:11",
@@ -1337,6 +1074,308 @@
       "code_preview": ""
     },
     {
+      "name": "ensureReposRootInitialized",
+      "qualified_name": "src.lib.stores.tauri.ts.ensureReposRootInitialized",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def ensureReposRootInitialized(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "getReposRoot",
+        "setReposRoot"
+      ],
+      "cfg_summary": "complexity:4, blocks:9",
+      "dfg_summary": "vars:9, def-use chains:3",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "persistReposRoot",
+      "qualified_name": "src.lib.stores.tauri.ts.persistReposRoot",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def persistReposRoot(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "setReposRoot",
+        "loadConfig"
+      ],
+      "cfg_summary": "complexity:2, blocks:4",
+      "dfg_summary": "vars:6, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "isTauri",
+      "qualified_name": "src.lib.stores.tauri.ts.isTauri",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def isTauri(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:1, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "getReposRoot",
+      "qualified_name": "src.lib.stores.tauri.ts.getReposRoot",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def getReposRoot(...)",
+      "docstring": "",
+      "calls": [
+        "ensureReposRootInitialized"
+      ],
+      "called_by": [
+        "init",
+        "listDir",
+        "loadConfig",
+        "setReposRoot",
+        "readFile"
+      ],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:3, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "setReposRoot",
+      "qualified_name": "src.lib.stores.tauri.ts.setReposRoot",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def setReposRoot(...)",
+      "docstring": "",
+      "calls": [
+        "init",
+        "getReposRoot",
+        "persistReposRoot",
+        "setReposRoot",
+        "ensureReposRootInitialized"
+      ],
+      "called_by": [
+        "setReposRoot"
+      ],
+      "cfg_summary": "complexity:1, blocks:1",
+      "dfg_summary": "vars:8, def-use chains:2",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "listDir",
+      "qualified_name": "src.lib.stores.tauri.ts.listDir",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def listDir(...)",
+      "docstring": "",
+      "calls": [
+        "mockListDir",
+        "getReposRoot"
+      ],
+      "called_by": [
+        "refreshProjectTree"
+      ],
+      "cfg_summary": "complexity:2, blocks:5",
+      "dfg_summary": "vars:16, def-use chains:9",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "readFile",
+      "qualified_name": "src.lib.stores.tauri.ts.readFile",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def readFile(...)",
+      "docstring": "",
+      "calls": [
+        "mockReadFile",
+        "getReposRoot"
+      ],
+      "called_by": [
+        "openFile"
+      ],
+      "cfg_summary": "complexity:2, blocks:5",
+      "dfg_summary": "vars:14, def-use chains:7",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "loadConfig",
+      "qualified_name": "src.lib.stores.tauri.ts.loadConfig",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def loadConfig(...)",
+      "docstring": "",
+      "calls": [
+        "getReposRoot",
+        "mockLoadConfig",
+        "persistReposRoot"
+      ],
+      "called_by": [
+        "init"
+      ],
+      "cfg_summary": "complexity:3, blocks:7",
+      "dfg_summary": "vars:16, def-use chains:11",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "saveConfig",
+      "qualified_name": "src.lib.stores.tauri.ts.saveConfig",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def saveConfig(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:2, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "watchDir",
+      "qualified_name": "src.lib.stores.tauri.ts.watchDir",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def watchDir(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:3, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "unwatchDir",
+      "qualified_name": "src.lib.stores.tauri.ts.unwatchDir",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def unwatchDir(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:2, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "pickFolder",
+      "qualified_name": "src.lib.stores.tauri.ts.pickFolder",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def pickFolder(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "addProjectViaDialog"
+      ],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:3, def-use chains:1",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "listenFsChange",
+      "qualified_name": "src.lib.stores.tauri.ts.listenFsChange",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def listenFsChange(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:3, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "mockLoadConfig",
+      "qualified_name": "src.lib.stores.tauri.ts.mockLoadConfig",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def mockLoadConfig(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "loadConfig"
+      ],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:2, def-use chains:0",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "mockListDir",
+      "qualified_name": "src.lib.stores.tauri.ts.mockListDir",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def mockListDir(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "listDir"
+      ],
+      "cfg_summary": "complexity:1, blocks:2",
+      "dfg_summary": "vars:8, def-use chains:33",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
+      "name": "mockReadFile",
+      "qualified_name": "src.lib.stores.tauri.ts.mockReadFile",
+      "file": "src/lib/stores/tauri.ts",
+      "line": 1,
+      "language": "typescript",
+      "unit_type": "function",
+      "signature": "def mockReadFile(...)",
+      "docstring": "",
+      "calls": [],
+      "called_by": [
+        "readFile"
+      ],
+      "cfg_summary": "complexity:4, blocks:11",
+      "dfg_summary": "vars:7, def-use chains:10",
+      "dependencies": "$lib/types",
+      "code_preview": ""
+    },
+    {
       "name": "initializeHiddenProjects",
       "qualified_name": "src.lib.stores.projects.svelte.ts.initializeHiddenProjects",
       "file": "src/lib/stores/projects.svelte.ts",
@@ -1365,9 +1404,9 @@
       "docstring": "",
       "calls": [],
       "called_by": [
+        "unhideProject",
         "hideProject",
         "init",
-        "unhideProject",
         "removeProject"
       ],
       "cfg_summary": "complexity:2, blocks:4",
@@ -1386,10 +1425,10 @@
       "docstring": "",
       "calls": [],
       "called_by": [
-        "init",
-        "removeProject",
+        "hideProject",
         "selectProject",
-        "hideProject"
+        "init",
+        "removeProject"
       ],
       "cfg_summary": "complexity:1, blocks:2",
       "dfg_summary": "vars:4, def-use chains:1",
@@ -1422,15 +1461,15 @@
       "signature": "def init(...)",
       "docstring": "",
       "calls": [
-        "refreshProjectTree",
+        "getReposRoot",
         "loadConfig",
-        "isProjectVisible",
-        "persistHiddenProjects",
-        "getReposRoot"
+        "initializeHiddenProjects",
+        "refreshProjectTree",
+        "persistHiddenProjects"
       ],
       "called_by": [
-        "refreshProjects",
-        "setReposRoot"
+        "setReposRoot",
+        "refreshProjects"
       ],
       "cfg_summary": "complexity:8, blocks:18",
       "dfg_summary": "vars:33, def-use chains:23",
@@ -1467,8 +1506,8 @@
       "signature": "def removeProject(...)",
       "docstring": "",
       "calls": [
-        "isProjectVisible",
-        "persistHiddenProjects"
+        "persistHiddenProjects",
+        "isProjectVisible"
       ],
       "called_by": [],
       "cfg_summary": "complexity:2, blocks:3",
@@ -1489,10 +1528,10 @@
         "listDir"
       ],
       "called_by": [
-        "hideProject",
-        "init",
         "unhideProject",
         "selectProject",
+        "hideProject",
+        "init",
         "addProject"
       ],
       "cfg_summary": "complexity:2, blocks:4",
@@ -1529,8 +1568,8 @@
       "signature": "def addProjectViaDialog(...)",
       "docstring": "",
       "calls": [
-        "addProject",
-        "pickFolder"
+        "pickFolder",
+        "addProject"
       ],
       "called_by": [],
       "cfg_summary": "complexity:2, blocks:3",
@@ -1548,11 +1587,11 @@
       "signature": "def setReposRoot(...)",
       "docstring": "",
       "calls": [
-        "setReposRoot",
-        "persistReposRoot",
-        "ensureReposRootInitialized",
         "init",
-        "getReposRoot"
+        "getReposRoot",
+        "persistReposRoot",
+        "setReposRoot",
+        "ensureReposRootInitialized"
       ],
       "called_by": [
         "setReposRoot"
@@ -1590,9 +1629,9 @@
       "signature": "def hideProject(...)",
       "docstring": "",
       "calls": [
-        "refreshProjectTree",
         "persistHiddenProjects",
-        "isProjectVisible"
+        "isProjectVisible",
+        "refreshProjectTree"
       ],
       "called_by": [],
       "cfg_summary": "complexity:4, blocks:8",
@@ -1610,8 +1649,8 @@
       "signature": "def unhideProject(...)",
       "docstring": "",
       "calls": [
-        "refreshProjectTree",
-        "persistHiddenProjects"
+        "persistHiddenProjects",
+        "refreshProjectTree"
       ],
       "called_by": [],
       "cfg_summary": "complexity:3, blocks:6",
@@ -1750,5 +1789,5 @@
   ],
   "model": "BAAI/bge-large-en-v1.5",
   "dimension": 1024,
-  "count": 93
+  "count": 95
 }

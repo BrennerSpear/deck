@@ -11,20 +11,18 @@
 		if (href === '/') return page.url.pathname === '/';
 		return page.url.pathname.startsWith(href);
 	}
+
+	function tabClass(href: string): string {
+		const base = 'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors';
+		if (isActive(href)) return `${base} bg-zinc-800 text-zinc-100`;
+		return `${base} text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50`;
+	}
 </script>
 
 <nav class="h-10 flex items-center gap-1 px-4 border-b border-zinc-800 bg-zinc-925 flex-shrink-0">
 	<span class="text-sm font-semibold text-zinc-300 mr-4">Deck</span>
 	{#each tabs as tab}
-		<a
-			href={tab.href}
-			class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors"
-			class:bg-zinc-800={isActive(tab.href)}
-			class:text-zinc-100={isActive(tab.href)}
-			class:text-zinc-500={!isActive(tab.href)}
-			class:hover:text-zinc-300={!isActive(tab.href)}
-			class:hover:bg-zinc-800/50={!isActive(tab.href)}
-		>
+		<a href={tab.href} class={tabClass(tab.href)}>
 			{#if tab.icon === 'projects'}
 				<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
