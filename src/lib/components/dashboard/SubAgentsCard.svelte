@@ -21,7 +21,12 @@
 			}
 			const data = await res.json();
 			const all: SubAgent[] = Array.isArray(data) ? data : data.sessions ?? [];
-			agents = all.filter((s) => s.kind === 'subagent' || s.kind === 'sub-agent');
+			agents = all.filter(
+				(s) =>
+					s.kind === 'subagent' ||
+					s.kind === 'sub-agent' ||
+					(s.sessionKey && String(s.sessionKey).includes(':subagent:'))
+			);
 			error = null;
 		} catch (e) {
 			error = e instanceof Error ? e.message : 'Failed to fetch';
