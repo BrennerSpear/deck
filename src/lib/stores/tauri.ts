@@ -6,7 +6,7 @@
 import type { Project, DirEntry } from '$lib/types';
 
 const REPOS_ROOT_STORAGE_KEY = 'deck.reposRoot';
-const DEFAULT_REPOS_ROOT = '~/repos';
+const DEFAULT_REPOS_ROOT = '~/projects';
 
 let configuredReposRoot = DEFAULT_REPOS_ROOT;
 let reposRootInitialized = false;

@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
 import type { Project } from '$lib/types';
 
-const DEFAULT_REPOS_ROOT = '~/repos';
+const DEFAULT_REPOS_ROOT = '~/projects';
 
 function expandHome(input: string): string {
 	if (!input.startsWith('~')) return input;
@@ -51,9 +51,15 @@ export function deriveProjectName(folderName: string): string {
 }
 
 export async function listProjects(rootOverride?: string | null): Promise<{ root: string; projects: Project[] }> {
-	const root = resolveReposRoot(rootOverride);
+	let root = resolveReposRoot(rootOverride);
+	// If the requested root doesn't exist, fall back to the default
 	if (!existsSync(root)) {
-		return { root, projects: [] };
+		const defaultRoot = resolveReposRoot(null);
+		if (root !== defaultRoot && existsSync(defaultRoot)) {
+			root = defaultRoot;
+		} else {
+			return { root, projects: [] };
+		}
 	}
 
 	const entries = await readdir(root, { withFileTypes: true });
