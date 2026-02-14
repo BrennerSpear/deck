@@ -122,3 +122,23 @@ export interface TmuxStreamMessage {
 	event?: AgentEvent;
 	error?: string;
 }
+
+// ── Dashboard Types ──────────────────────────────────────────────────────
+
+export interface CronJob {
+	name: string;
+	enabled: boolean;
+	schedule: string;
+	lastRun?: string;
+	lastStatus?: 'ok' | 'error' | 'skip';
+	consecutiveErrors: number;
+}
+
+export interface SubAgent {
+	sessionKey: string;
+	model: string;
+	tokensUsed: number;
+	duration: number;
+	status: string;
+	kind?: string;
+}
