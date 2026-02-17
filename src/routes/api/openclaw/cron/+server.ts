@@ -68,6 +68,7 @@ export const GET: RequestHandler = async () => {
 					consecutiveErrors: (state.consecutiveErrors as number) ?? 0,
 					lastError: state.lastError ?? null,
 					model: ((j.payload ?? {}) as Record<string, unknown>).model ?? null,
+					systemPrompt: ((j.payload ?? {}) as Record<string, unknown>).message ?? null,
 					sessionTarget: j.sessionTarget ?? null
 				};
 			}
