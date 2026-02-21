@@ -2,7 +2,7 @@
 	import CronHealthCard from '$lib/components/dashboard/CronHealthCard.svelte';
 	import TmuxSessionsCard from '$lib/components/dashboard/TmuxSessionsCard.svelte';
 	import SubAgentsCard from '$lib/components/dashboard/SubAgentsCard.svelte';
-	import TelegramTopicsCard from '$lib/components/dashboard/TelegramTopicsCard.svelte';
+	import DiscordChannelsCard from '$lib/components/dashboard/DiscordChannelsCard.svelte';
 </script>
 
 <div class="h-full overflow-y-auto p-6">
@@ -16,7 +16,7 @@
 			<CronHealthCard class="lg:col-span-2" />
 			<TmuxSessionsCard class="lg:col-span-1" />
 			<SubAgentsCard class="lg:col-span-2" />
-			<TelegramTopicsCard class="lg:col-span-2" />
+			<DiscordChannelsCard class="lg:col-span-2" />
 		</div>
 	</div>
 </div>
