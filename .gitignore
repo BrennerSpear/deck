@@ -10,3 +10,6 @@ build
 # Tauri
 src-tauri/target/
 .tldr/
+
+# OpenClaw Discord channel mapping
+.discord-channel
